@@ -15,6 +15,7 @@ class MetaDataBloc extends Cubit<MetaDataState> {
     this.emit(MetaDataState.loading());
     var metaResponse = await metaDataRepo.fetchMetaData();
     if (metaResponse is AppConfig) {
+      // sae config in local storage.
       this.emit(MetaDataState.loaded(appConfig: metaResponse));
     } else {
       this.emit(MetaDataState.error(message: '$metaResponse'));
