@@ -42,16 +42,23 @@ class AuthenticationState extends Union6Impl<
   factory AuthenticationState.loading() =>
       AuthenticationState._(_factory.first(_AuthenticationLoading()));
 
-  factory AuthenticationState.validationFailed(
-          {String? phoneError,
-          String? emailError,
-          String? passwordError,
-          String? nameError}) =>
+  factory AuthenticationState.validationFailed({
+    String? emailError,
+    String? passwordError,
+    String? phoneError,
+    String? firstNameError,
+    String? genericError,
+    String? lastNameError,
+    String? bvnError,
+  }) =>
       AuthenticationState._(_factory.second(_AuthDataValidationFailed(
+          emailError: emailError,
           passwordError: passwordError,
-          nameError: nameError,
           phoneError: phoneError,
-          emailError: emailError)));
+          genericError: genericError,
+          firstNameError: firstNameError,
+          lastNameError: lastNameError,
+          bvnError: bvnError)));
 
   factory AuthenticationState.loginAttemptFailed({required String message}) =>
       AuthenticationState._(
@@ -104,14 +111,32 @@ class _AuthDataValidationFailed extends Equatable {
   final String? emailError;
   final String? passwordError;
   final String? phoneError;
-  final String? nameError;
+
+  final String? firstNameError;
+  final String? genericError;
+
+  final String? lastNameError;
+  final String? bvnError;
 
   _AuthDataValidationFailed(
-      {this.emailError, this.passwordError, this.phoneError, this.nameError});
+      {this.emailError,
+      this.genericError,
+      this.passwordError,
+      this.phoneError,
+      this.firstNameError,
+      this.lastNameError,
+      this.bvnError});
 
   @override
   // TODO: implement props
-  List<Object?> get props => [emailError, passwordError, phoneError, nameError];
+  List<Object?> get props => [
+        emailError,
+        passwordError,
+        phoneError,
+        firstNameError,
+        lastNameError,
+        bvnError
+      ];
 }
 
 class _SignUpAttemptFailed extends Equatable {

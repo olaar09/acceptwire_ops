@@ -14,8 +14,8 @@ import 'package:focus_detector/focus_detector.dart';
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var _authBloc = context.watch<AuthBloc>();
-    var _metaBloc = context.watch<MetaDataBloc>();
+    var _authBloc = context.read<AuthBloc>();
+    var _metaBloc = context.read<MetaDataBloc>();
 
     Widget displayContent(MetaDataState state) {
       return Column(
@@ -43,7 +43,7 @@ class SplashScreen extends StatelessWidget {
     void navigateToDashboard() {
       _metaBloc.state.join(
           (loading) => null,
-          (loaded) => {navOfAllPage(context: context, route: '/dashboard')},
+          (loaded) => {navOfAllPage(context: context, route: '/profile')},
           (error) => null);
     }
 

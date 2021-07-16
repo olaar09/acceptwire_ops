@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfilePage extends StatelessWidget {
-  showProfile(context, User user) {
+  showProfile(AuthBloc bloc, User user) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -65,7 +65,7 @@ class ProfilePage extends StatelessWidget {
             height: 15,
           ),
           primaryButton('Logout', vertical: 10, onPressed: () async {
-            context.read<AuthBloc>().fireLoggedOutEvent();
+            bloc.fireLoggedOutEvent();
           })
           // Add widgets for verifying email
           // and, signing out the user
@@ -75,11 +75,13 @@ class ProfilePage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext buildContext) {
+    var _authBloc = buildContext.read<AuthBloc>();
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        leading: leadingBtn(context),
+        leading: leadingBtn(buildContext),
         title: Text('Profile'),
         backgroundColor: Vl.color(color: MColor.K_LIGHT_PLAIN),
       ),
@@ -101,7 +103,7 @@ class ProfilePage extends StatelessWidget {
             (loginAttemptFailed) => emptyState(),
             (signUpAttemptFailed) => emptyState(),
             (unAuth) => emptyState(),
-            (authenticated) => showProfile(context, authenticated.user),
+            (authenticated) => showProfile(_authBloc, authenticated.user),
           );
         },
       ),

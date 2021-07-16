@@ -1,5 +1,8 @@
 class AuthData {
-  String? fullName;
+  String? firstName;
+  String? lastName;
+  String? bvnNumber;
+
   String? email;
   String? phone;
   String? password;
@@ -8,9 +11,22 @@ class AuthData {
     return AuthData(password: password, email: email);
   }
 
-  factory AuthData.signUp({name, email, password}) {
-    return AuthData(password: password, email: email, fullName: name);
+  factory AuthData.signUp(
+      {firstName, lastName, bvnNumber, phone, email, password}) {
+    return AuthData(
+        password: password,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        bvnNumber: bvnNumber,
+        phone: phone);
   }
 
-  AuthData({this.fullName, this.email, this.password, this.phone});
+  AuthData(
+      {this.firstName,
+      this.lastName,
+      this.bvnNumber,
+      this.email,
+      this.password,
+      this.phone});
 }

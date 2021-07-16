@@ -60,8 +60,6 @@ class LoginPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: boldText('Sign in'),
-        centerTitle: false,
         elevation: 0,
         leading: leadingBtn(context),
         backgroundColor: Vl.color(color: MColor.K_LIGHT_PLAIN),
@@ -83,8 +81,16 @@ class LoginPage extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
             child: Form(
-              child: Column(
+              child: ListView(
                 children: <Widget>[
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      boldText('Sign in'),
+                    ],
+                  ),
+                  SizedBox(height: 10),
                   mTextField('Email address',
                       onChanged: (text) {},
                       controller: _emailTextController,
@@ -116,7 +122,7 @@ class LoginPage extends StatelessWidget {
                       (loading) => networkActivityIndicator(),
                       (validationFailed) => actionButtons(context, authBloc),
                       (loginAttemptFailed) => actionButtons(context, authBloc),
-                      (signUpAttemptFailed) => emptyState(),
+                      (signUpAttemptFailed) => actionButtons(context, authBloc),
                       (unAuth) => actionButtons(context, authBloc),
                       (authenticated) => actionButtons(context, authBloc))
                 ],

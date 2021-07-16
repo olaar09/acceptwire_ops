@@ -10,6 +10,7 @@ import 'package:acceptwire/presentation/splash.dart';
 import 'package:acceptwire/utils/helpers/rest_client.dart';
 import 'package:acceptwire/utils/helpers/theme.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
@@ -33,13 +34,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final AuthRepository _authRepository = AuthRepository();
-  final MetaDataRepo _metaDataRepo = MetaDataRepo();
-  final Connectivity connectivity = Connectivity();
-  final RestClientRepository _restClientRepository = RestClientRepository();
+  late final Dio _restClientRepository;
+  late final AuthRepository _authRepository;
+  late final MetaDataRepo _metaDataRepo;
+  late final Connectivity connectivity;
 
   @override
   void initState() {
+    _restClientRepository = RestClientRepository().init();
+    _authRepository = AuthRepository(restClient: _restClientRepository);
+    _metaDataRepo = MetaDataRepo();
+    connectivity = Connectivity();
+
     super.initState();
   }
 

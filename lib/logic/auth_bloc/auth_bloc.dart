@@ -52,11 +52,15 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 
       User? user;
 
-      UserCredential userCredential =
-          await _authRepository.signInWithCredentials(
+      UserCredential userCredential = await _authRepository
+          .signInWithCredentials(
         '${event.authData.email}',
         '${event.authData.password}',
-      );
+      )
+          .timeout(Duration(minutes: 2), onTimeout: () {
+        print('timed out');
+        throw Exception('timed out');
+      });
       user = userCredential.user;
       yield AuthenticationState.userAuthenticated(user: user!);
     } on FirebaseAuthException catch (e) {
@@ -70,7 +74,7 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
     } catch (e) {
       print(e);
       yield AuthenticationState.loginAttemptFailed(
-          message: 'An unknown error happened');
+          message: 'An unknown error happened. Please check your internet');
     }
   }
 
@@ -89,13 +93,13 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 
       User? user;
       await _authRepository.registerUsingEmailPassword(
-        '${event.authData.fullName}',
+        '${event.authData.firstName}',
         '${event.authData.email}',
         '${event.authData.password}',
       );
 
-      user =
-          await _authRepository.updateDisplayName('${event.authData.fullName}');
+      user = await _authRepository.updateDisplayName(
+          '${event.authData.firstName} ${event.authData.lastName}');
 
       yield AuthenticationState.userAuthenticated(user: user!);
     } on FirebaseAuthException catch (e) {
@@ -105,7 +109,7 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
                 'Password must have at least 8 characters(1 upper letter, 1 number, 1 special character )');
       } else if (e.code == 'email-already-in-use') {
         yield AuthenticationState.signUpAttemptFailed(
-            message: 'Email already exist. SignUp instead.');
+            message: 'Email already exist. Sign in instead.');
       }
     } catch (e) {
       yield AuthenticationState.signUpAttemptFailed(
@@ -115,9 +119,28 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 
   Stream<AuthenticationState> _runValidations(event) async* {
     if (event is SignUpAttemptEvent) {
-      if (GetUtils.isNullOrBlank(event.authData.fullName)!) {
+      if (GetUtils.isNullOrBlank(event.authData.firstName)!) {
         yield AuthenticationState.validationFailed(
-            nameError: 'Please enter your name');
+            genericError: 'Please enter your first name',
+            firstNameError: 'Please enter your first name');
+        throw FormatException();
+      }
+      if (GetUtils.isNullOrBlank(event.authData.lastName)!) {
+        yield AuthenticationState.validationFailed(
+            genericError: 'Please enter your last name',
+            firstNameError: 'Please enter your last name');
+        throw FormatException();
+      }
+      if (GetUtils.isNullOrBlank(event.authData.phone)!) {
+        yield AuthenticationState.validationFailed(
+            genericError: 'Please enter your your phone number',
+            firstNameError: 'Please enter your phone number');
+        throw FormatException();
+      }
+      if (GetUtils.isNullOrBlank(event.authData.bvnNumber)!) {
+        yield AuthenticationState.validationFailed(
+            genericError: 'Please enter your bvn  number',
+            firstNameError: 'Please enter your bvn');
         throw FormatException();
       }
     }
@@ -126,12 +149,14 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
       if (GetUtils.isNullOrBlank(event.authData.email)! ||
           !GetUtils.isEmail('${event.authData.email}')) {
         yield AuthenticationState.validationFailed(
+            genericError: 'Please enter a valid  email address',
             emailError: 'Please provide a valid email address');
         throw FormatException();
       }
 
       if (GetUtils.isNullOrBlank(event.authData.password)!) {
         yield AuthenticationState.validationFailed(
+            genericError: 'Please provide a password',
             passwordError: 'Please provide a password');
         throw FormatException();
       }
@@ -170,10 +195,21 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
         authData: AuthData.login(email: email, password: password)));
   }
 
-  fireRegisterEvent({required name, required password, required email}) {
+  fireRegisterEvent(
+      {required firstName,
+      required lastName,
+      required phone,
+      required bvn,
+      required password,
+      required email}) {
     this.add(SignUpAttemptEvent(
-        authData:
-            AuthData.signUp(email: email, password: password, name: name)));
+        authData: AuthData.signUp(
+            email: email,
+            password: password,
+            firstName: firstName,
+            bvnNumber: bvn,
+            lastName: lastName,
+            phone: phone)));
   }
 
   @override

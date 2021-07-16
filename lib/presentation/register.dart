@@ -5,6 +5,7 @@ import 'package:acceptwire/logic/auth_bloc/auth_states.dart';
 import 'package:acceptwire/utils/helpers/buttons.dart';
 import 'package:acceptwire/utils/helpers/get_value.dart';
 import 'package:acceptwire/utils/helpers/navigation.dart';
+import 'package:acceptwire/utils/helpers/text.dart';
 import 'package:acceptwire/utils/validators/signup_validator.dart';
 import 'package:acceptwire/utils/widgets/error.dart';
 import 'package:acceptwire/utils/widgets/loading.dart';
@@ -22,7 +23,12 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final _registerFormKey = GlobalKey<FormState>();
 
-  final _nameTextController = TextEditingController();
+  final _lastNameTextController = TextEditingController();
+  final _firstNameTextController = TextEditingController();
+
+  final _phoneTextController = TextEditingController();
+  final _bvnTextController = TextEditingController();
+
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
 
@@ -38,8 +44,11 @@ class _RegisterPageState extends State<RegisterPage> {
         Expanded(
           child: primaryButton('Sign Up', vertical: 14, onPressed: () async {
             authBloc.fireRegisterEvent(
-                name: _nameTextController.text,
+                firstName: _firstNameTextController.text,
                 email: _emailTextController.text,
+                lastName: _lastNameTextController.text,
+                phone: _phoneTextController.text,
+                bvn: _bvnTextController.text,
                 password: _passwordTextController.text);
           }),
         ),
@@ -68,11 +77,21 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  boldText('Create account'),
+                ],
+              ),
+              SizedBox(height: 10),
               BlocConsumer<AuthBloc, AuthenticationState>(
                 listener: (context, state) {
                   state.join(
                       (loading) => null,
-                      (validationFailed) => null,
+                      (validationFailed) => mSnackBar(
+                          message: validationFailed.genericError,
+                          context: context),
                       (loginAttemptFailed) => null,
                       (signUpAttemptFailed) => mSnackBar(
                           message: signUpAttemptFailed.message,
@@ -84,53 +103,61 @@ class _RegisterPageState extends State<RegisterPage> {
                 builder: (context, state) {
                   return Form(
                     key: _registerFormKey,
-                    child: Column(
-                      children: <Widget>[
-                        mTextField('Full Name',
-                            onChanged: (text) {},
-                            controller: _nameTextController,
-                            error: state.join(
-                                (loading) => null,
-                                (validationFailed) =>
-                                    validationFailed.nameError,
-                                (loginAttemptFailed) => null,
-                                (signUpAttemptFailed) => null,
-                                (unAuth) => null,
-                                (authenticated) => null)),
-                        SizedBox(height: 8.0),
-                        mTextField('Email address',
-                            onChanged: (text) {},
-                            controller: _emailTextController,
-                            error: state.join(
-                                (loading) => null,
-                                (validationFailed) =>
-                                    validationFailed.emailError,
-                                (loginAttemptFailed) => null,
-                                (signUpAttemptFailed) => null,
-                                (unAuth) => null,
-                                (authenticated) => null)),
-                        SizedBox(height: 8.0),
-                        mTextField('Password',
-                            isPassword: true,
-                            onChanged: (text) {},
-                            controller: _passwordTextController,
-                            error: state.join(
-                                (loading) => null,
-                                (validationFailed) =>
-                                    validationFailed.passwordError,
-                                (loginAttemptFailed) => null,
-                                (signUpAttemptFailed) => null,
-                                (unAuth) => null,
-                                (authenticated) => null)),
-                        SizedBox(height: 32.0),
-                        state.join(
-                            (loading) => networkActivityIndicator(),
-                            (validationFailed) => actionButton(authBloc),
-                            (loginAttemptFailed) => emptyState(),
-                            (signUpAttemptFailed) => emptyState(),
-                            (unAuth) => actionButton(authBloc),
-                            (authenticated) => actionButton(authBloc))
-                      ],
+                    child: Expanded(
+                      child: ListView(
+                        children: <Widget>[
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: mTextField('First Name',
+                                      onChanged: (text) {},
+                                      controller: _firstNameTextController,
+                                      error: '')),
+                              SizedBox(width: 10),
+                              Expanded(
+                                  child: mTextField('Last Name',
+                                      onChanged: (text) {},
+                                      controller: _lastNameTextController,
+                                      error: ''))
+                            ],
+                          ),
+                          SizedBox(height: 8.0),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: mTextField('Phone Number',
+                                      onChanged: (text) {},
+                                      controller: _phoneTextController,
+                                      error: '')),
+                              SizedBox(width: 10),
+                              Expanded(
+                                  child: mTextField('BVN Number',
+                                      onChanged: (text) {},
+                                      controller: _bvnTextController,
+                                      error: ''))
+                            ],
+                          ),
+                          SizedBox(height: 8.0),
+                          mTextField('Email address',
+                              onChanged: (text) {},
+                              controller: _emailTextController,
+                              error: ''),
+                          SizedBox(height: 8.0),
+                          mTextField('Password',
+                              isPassword: true,
+                              onChanged: (text) {},
+                              controller: _passwordTextController,
+                              error: ''),
+                          SizedBox(height: 32.0),
+                          state.join(
+                              (loading) => networkActivityIndicator(),
+                              (validationFailed) => actionButton(authBloc),
+                              (loginAttemptFailed) => emptyState(),
+                              (signUpAttemptFailed) => actionButton(authBloc),
+                              (unAuth) => actionButton(authBloc),
+                              (authenticated) => actionButton(authBloc))
+                        ],
+                      ),
                     ),
                   );
                 },
