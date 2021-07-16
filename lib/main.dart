@@ -8,6 +8,7 @@ import 'package:acceptwire/presentation/onboarding.dart';
 import 'package:acceptwire/presentation/profile.dart';
 import 'package:acceptwire/presentation/splash.dart';
 import 'package:acceptwire/utils/helpers/rest_client.dart';
+import 'package:acceptwire/utils/helpers/theme.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -65,10 +66,7 @@ class _MyAppState extends State<MyApp> {
         ],
         child: MaterialApp(
           title: 'acceptwire',
-          theme: ThemeData(
-            fontFamily: 'SamoSans',
-            primarySwatch: Colors.blue,
-          ),
+          theme: appThemes[ThemeChoice.Light],
           home: SplashScreen(),
           onGenerateRoute: generateRoute,
         ),
