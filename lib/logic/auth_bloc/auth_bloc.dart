@@ -15,20 +15,14 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
       required MetaDataRepo metaDataRepo})
       : _authRepository = authRepository,
         _metadataRepository = metaDataRepo,
-        super(UserUnAuthenticated());
+        super(AuthenticationState.userUnAuthenticated());
 
   @override
   Stream<AuthenticationState> mapEventToState(
       AuthenticationEvent event) async* {
     if (event is AuthenticationLoading) {
-      yield AuthenticationLoadingState();
+      yield AuthenticationState.loading();
     }
-
-/*    if (!await _metadataRepository.getIsConnected()) {
-      yield LoginAttemptFailedState(
-          message: 'Device is not connected to the internet');
-      return;
-    }*/
 
     if (event is LoginAttemptEvent) {
       yield* _mapAppLoginAttemptToState(event: event);
@@ -48,7 +42,7 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
       {required LoginAttemptEvent event}) async* {
     bool forceStop = false;
     try {
-      yield AuthenticationLoadingState();
+      yield AuthenticationState.loading();
       yield* _runValidations(event).handleError((error) {
         forceStop = true;
         return;
@@ -64,16 +58,19 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
         '${event.authData.password}',
       );
       user = userCredential.user;
-      yield UserAuthenticated(user: user!);
+      yield AuthenticationState.userAuthenticated(user: user!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        yield LoginAttemptFailedState(message: 'Email or password incorrect');
+        yield AuthenticationState.loginAttemptFailed(
+            message: 'Email or password incorrect');
       } else if (e.code == 'wrong-password') {
-        yield LoginAttemptFailedState(message: 'Email or password incorrect');
+        yield AuthenticationState.loginAttemptFailed(
+            message: 'Email or password incorrect');
       }
     } catch (e) {
       print(e);
-      yield LoginAttemptFailedState(message: 'An unknown error happened');
+      yield AuthenticationState.loginAttemptFailed(
+          message: 'An unknown error happened');
     }
   }
 
@@ -81,7 +78,7 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
       {required SignUpAttemptEvent event}) async* {
     bool forceStop = false;
     try {
-      yield AuthenticationLoadingState();
+      yield AuthenticationState.loading();
 
       yield* _runValidations(event).handleError((error) {
         forceStop = true;
@@ -100,25 +97,26 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
       user =
           await _authRepository.updateDisplayName('${event.authData.fullName}');
 
-      yield UserAuthenticated(user: user!);
+      yield AuthenticationState.userAuthenticated(user: user!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        yield SignUpAttemptFailedState(
+        yield AuthenticationState.signUpAttemptFailed(
             message:
                 'Password must have at least 8 characters(1 upper letter, 1 number, 1 special character )');
       } else if (e.code == 'email-already-in-use') {
-        yield SignUpAttemptFailedState(
+        yield AuthenticationState.signUpAttemptFailed(
             message: 'Email already exist. SignUp instead.');
       }
     } catch (e) {
-      yield SignUpAttemptFailedState(message: 'An unknown error happened');
+      yield AuthenticationState.signUpAttemptFailed(
+          message: 'An unknown error happened');
     }
   }
 
   Stream<AuthenticationState> _runValidations(event) async* {
     if (event is SignUpAttemptEvent) {
       if (GetUtils.isNullOrBlank(event.authData.fullName)!) {
-        yield AuthDataValidationFailedState(
+        yield AuthenticationState.validationFailed(
             nameError: 'Please enter your name');
         throw FormatException();
       }
@@ -127,13 +125,13 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
     if (event is LoginAttemptEvent || event is SignUpAttemptEvent) {
       if (GetUtils.isNullOrBlank(event.authData.email)! ||
           !GetUtils.isEmail('${event.authData.email}')) {
-        yield AuthDataValidationFailedState(
+        yield AuthenticationState.validationFailed(
             emailError: 'Please provide a valid email address');
         throw FormatException();
       }
 
       if (GetUtils.isNullOrBlank(event.authData.password)!) {
-        yield AuthDataValidationFailedState(
+        yield AuthenticationState.validationFailed(
             passwordError: 'Please provide a password');
         throw FormatException();
       }
@@ -143,14 +141,14 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   Stream<AuthenticationState> _mapLoggedInToState() async* {
     User? user = await _authRepository.getUser();
     if (GetUtils.isNullOrBlank(user) ?? true)
-      yield UserUnAuthenticated();
+      yield AuthenticationState.userUnAuthenticated();
     else
-      yield UserAuthenticated(user: user!);
+      yield AuthenticationState.userAuthenticated(user: user!);
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
-    yield UserUnAuthenticated();
     _authRepository.signOut();
+    yield AuthenticationState.userUnAuthenticated();
   }
 
   loadUser() async {

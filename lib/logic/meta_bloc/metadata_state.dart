@@ -29,16 +29,25 @@ class MetaDataState extends Union3Impl<_MetaDataLoadingState,
       MetaDataState._(_factory.third(_MetaDataErrorState(message: message)));
 }
 
-class _MetaDataLoadingState {}
+class _MetaDataLoadingState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
 
-class _MetaDataLoadedState {
+class _MetaDataLoadedState extends Equatable {
   final AppConfig appConfig;
 
   _MetaDataLoadedState({required this.appConfig});
+
+  @override
+  List<Object?> get props => [appConfig];
 }
 
-class _MetaDataErrorState {
+class _MetaDataErrorState extends Equatable {
   final String message;
 
   _MetaDataErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }

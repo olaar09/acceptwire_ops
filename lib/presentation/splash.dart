@@ -40,6 +40,19 @@ class SplashScreen extends StatelessWidget {
       );
     }
 
+    void navigateToDashboard() {
+      _metaBloc.state.join(
+          (loading) => null,
+          (loaded) => {navOfAllPage(context: context, route: '/dashboard')},
+          (error) => null);
+    }
+
+    void navigateToOnboard() {
+      _metaBloc.state.join((loading) => null, (loaded) {
+        navOfAllPage(context: context, route: '/onboard');
+      }, (error) => null);
+    }
+
     return Scaffold(
       backgroundColor: Vl.color(color: MColor.K_LIGHT_PLAIN),
       body: FocusDetector(
@@ -48,18 +61,15 @@ class SplashScreen extends StatelessWidget {
           listeners: [
             BlocListener<AuthBloc, AuthenticationState>(
                 listener: (context, authState) {
-              if (authState is UserAuthenticated) {
-                _metaBloc.state.join(
-                    (loading) => null,
-                    (loaded) =>
-                        {navOfAllPage(context: context, route: '/library')},
-                    (error) => null);
-              }
-              if (authState is UserUnAuthenticated) {
-                _metaBloc.state.join((loading) => null, (loaded) {
-                  navOfAllPage(context: context, route: '/onboard');
-                }, (error) => null);
-              }
+              authState.join(
+                  (loading) => null,
+                  (validationFailed) => null,
+                  (loginAttemptFailed) => null,
+                  (signUpAttemptFailed) => null, (unAuthenticated) {
+                navigateToOnboard();
+              }, (authenticated) {
+                navigateToDashboard();
+              });
             }),
           ],
           child: BlocBuilder<MetaDataBloc, MetaDataState>(

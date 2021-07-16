@@ -6,6 +6,7 @@ import 'package:acceptwire/utils/helpers/buttons.dart';
 import 'package:acceptwire/utils/helpers/get_value.dart';
 import 'package:acceptwire/utils/helpers/navigation.dart';
 import 'package:acceptwire/utils/validators/signup_validator.dart';
+import 'package:acceptwire/utils/widgets/error.dart';
 import 'package:acceptwire/utils/widgets/loading.dart';
 import 'package:acceptwire/utils/widgets/snackbars.dart';
 import 'package:acceptwire/utils/widgets/text_field.dart';
@@ -31,6 +32,21 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool _isProcessing = false;
 
+  actionButton(authBloc) {
+    return Row(
+      children: [
+        Expanded(
+          child: primaryButton('Sign Up', vertical: 14, onPressed: () async {
+            authBloc.fireRegisterEvent(
+                name: _nameTextController.text,
+                email: _emailTextController.text,
+                password: _passwordTextController.text);
+          }),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthBloc authBloc = context.read<AuthBloc>();
@@ -54,10 +70,16 @@ class _RegisterPageState extends State<RegisterPage> {
             children: [
               BlocConsumer<AuthBloc, AuthenticationState>(
                 listener: (context, state) {
-                  print(state);
-                  if (state is SignUpAttemptFailedState) {
-                    mSnackBar(message: state.message, context: context);
-                  }
+                  state.join(
+                      (loading) => null,
+                      (validationFailed) => null,
+                      (loginAttemptFailed) => null,
+                      (signUpAttemptFailed) => mSnackBar(
+                          message: signUpAttemptFailed.message,
+                          context: context),
+                      (unAuth) => null,
+                      (authenticated) =>
+                          navOfAllPage(context: context, route: '/library'));
                 },
                 builder: (context, state) {
                   return Form(
@@ -67,41 +89,47 @@ class _RegisterPageState extends State<RegisterPage> {
                         mTextField('Full Name',
                             onChanged: (text) {},
                             controller: _nameTextController,
-                            error: state is AuthDataValidationFailedState
-                                ? state.nameError
-                                : null),
+                            error: state.join(
+                                (loading) => null,
+                                (validationFailed) =>
+                                    validationFailed.nameError,
+                                (loginAttemptFailed) => null,
+                                (signUpAttemptFailed) => null,
+                                (unAuth) => null,
+                                (authenticated) => null)),
                         SizedBox(height: 8.0),
                         mTextField('Email address',
                             onChanged: (text) {},
                             controller: _emailTextController,
-                            error: state is AuthDataValidationFailedState
-                                ? state.emailError
-                                : null),
+                            error: state.join(
+                                (loading) => null,
+                                (validationFailed) =>
+                                    validationFailed.emailError,
+                                (loginAttemptFailed) => null,
+                                (signUpAttemptFailed) => null,
+                                (unAuth) => null,
+                                (authenticated) => null)),
                         SizedBox(height: 8.0),
                         mTextField('Password',
                             isPassword: true,
                             onChanged: (text) {},
                             controller: _passwordTextController,
-                            error: state is AuthDataValidationFailedState
-                                ? state.passwordError
-                                : null),
+                            error: state.join(
+                                (loading) => null,
+                                (validationFailed) =>
+                                    validationFailed.passwordError,
+                                (loginAttemptFailed) => null,
+                                (signUpAttemptFailed) => null,
+                                (unAuth) => null,
+                                (authenticated) => null)),
                         SizedBox(height: 32.0),
-                        state is AuthenticationLoadingState?
-                            ? networkActivityIndicator()
-                            : Row(
-                                children: [
-                                  Expanded(
-                                    child: primaryButton('Sign Up',
-                                        vertical: 14, onPressed: () async {
-                                      authBloc.fireRegisterEvent(
-                                          name: _nameTextController.text,
-                                          email: _emailTextController.text,
-                                          password:
-                                              _passwordTextController.text);
-                                    }),
-                                  ),
-                                ],
-                              )
+                        state.join(
+                            (loading) => networkActivityIndicator(),
+                            (validationFailed) => actionButton(authBloc),
+                            (loginAttemptFailed) => emptyState(),
+                            (signUpAttemptFailed) => emptyState(),
+                            (unAuth) => actionButton(authBloc),
+                            (authenticated) => actionButton(authBloc))
                       ],
                     ),
                   );
