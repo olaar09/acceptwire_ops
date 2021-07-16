@@ -1,4 +1,4 @@
-import 'package:acceptwire/data/podo/lecture_podo.dart';
+import 'package:acceptwire/podo/lecture_podo.dart';
 
 abstract class LibraryState {}
 

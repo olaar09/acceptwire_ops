@@ -1,6 +1,5 @@
-import 'package:acceptwire/data/podo/lecture_podo.dart';
-import 'package:acceptwire/data/repository/auth_repository.dart';
-import 'package:acceptwire/data/repository/meta_repository.dart';
+import 'package:acceptwire/repository/auth_repository.dart';
+import 'package:acceptwire/repository/meta_repository.dart';
 import 'package:acceptwire/logic/auth_bloc/bloc.dart';
 import 'package:acceptwire/logic/meta_bloc/bloc.dart';
 import 'package:acceptwire/logic/network_bloc/network_bloc.dart';

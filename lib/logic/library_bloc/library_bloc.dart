@@ -1,6 +1,6 @@
-import 'package:acceptwire/data/podo/lecture_podo.dart';
-import 'package:acceptwire/data/repository/auth_repository.dart';
-import 'package:acceptwire/data/repository/library_repository.dart';
+import 'package:acceptwire/podo/lecture_podo.dart';
+import 'package:acceptwire/repository/auth_repository.dart';
+import 'package:acceptwire/repository/library_repository.dart';
 import 'package:acceptwire/logic/library_bloc/bloc.dart';
 import 'package:acceptwire/utils/helpers/rest_client.dart';
 import 'package:dio/dio.dart';

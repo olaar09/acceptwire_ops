@@ -1,4 +1,4 @@
-import 'package:acceptwire/data/podo/login_podo.dart';
+import 'package:acceptwire/podo/login_podo.dart';
 import 'package:flutter/material.dart';
 
 abstract class AuthenticationEvent {}

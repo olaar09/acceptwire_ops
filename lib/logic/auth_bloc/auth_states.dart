@@ -1,35 +1,60 @@
+import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-abstract class AuthenticationState {}
+abstract class AuthenticationState extends Equatable {}
 
-class AuthenticationLoadingState extends AuthenticationState {}
-
-class UserAuthenticated extends AuthenticationState {
-  User? user;
-
-  UserAuthenticated({required this.user});
+class AuthenticationLoadingState extends AuthenticationState {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
 }
 
-class UserUnAuthenticated extends AuthenticationState {}
+class UserAuthenticated extends AuthenticationState {
+  final User user;
+
+  UserAuthenticated({required this.user});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [user];
+}
+
+class UserUnAuthenticated extends AuthenticationState {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
 
 class LoginAttemptFailedState extends AuthenticationState {
-  String message;
+  final String message;
 
   LoginAttemptFailedState({required this.message});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [message];
 }
 
 class AuthDataValidationFailedState extends AuthenticationState {
-  String? emailError;
-  String? passwordError;
-  String? phoneError;
-  String? nameError;
+  final String? emailError;
+  final String? passwordError;
+  final String? phoneError;
+  final String? nameError;
 
   AuthDataValidationFailedState(
       {this.emailError, this.passwordError, this.phoneError, this.nameError});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [emailError, passwordError, phoneError, nameError];
 }
 
 class SignUpAttemptFailedState extends AuthenticationState {
-  String message;
+  final String message;
 
   SignUpAttemptFailedState({required this.message});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [message];
 }

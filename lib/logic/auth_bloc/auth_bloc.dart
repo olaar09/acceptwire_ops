@@ -1,6 +1,6 @@
-import 'package:acceptwire/data/podo/login_podo.dart';
-import 'package:acceptwire/data/repository/auth_repository.dart';
-import 'package:acceptwire/data/repository/meta_repository.dart';
+import 'package:acceptwire/podo/login_podo.dart';
+import 'package:acceptwire/repository/auth_repository.dart';
+import 'package:acceptwire/repository/meta_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -64,7 +64,7 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
         '${event.authData.password}',
       );
       user = userCredential.user;
-      yield UserAuthenticated(user: user);
+      yield UserAuthenticated(user: user!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         yield LoginAttemptFailedState(message: 'Email or password incorrect');
@@ -100,7 +100,7 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
       user =
           await _authRepository.updateDisplayName('${event.authData.fullName}');
 
-      yield UserAuthenticated(user: user);
+      yield UserAuthenticated(user: user!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         yield SignUpAttemptFailedState(
@@ -141,7 +141,11 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
-    yield UserAuthenticated(user: await _authRepository.getUser());
+    User? user = await _authRepository.getUser();
+    if (GetUtils.isNullOrBlank(user) ?? true)
+      yield UserUnAuthenticated();
+    else
+      yield UserAuthenticated(user: user!);
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {

@@ -1,4 +1,4 @@
-import 'package:acceptwire/data/podo/app_config_podo.dart';
+import 'package:acceptwire/podo/app_config_podo.dart';
 
 abstract class MetaDataState {}
 

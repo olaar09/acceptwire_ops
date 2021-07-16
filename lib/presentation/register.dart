@@ -1,4 +1,4 @@
-import 'package:acceptwire/data/repository/fire_auth.dart';
+import 'package:acceptwire/repository/fire_auth.dart';
 import 'package:acceptwire/logic/auth_bloc/auth_bloc.dart';
 import 'package:acceptwire/logic/auth_bloc/auth_events.dart';
 import 'package:acceptwire/logic/auth_bloc/auth_states.dart';

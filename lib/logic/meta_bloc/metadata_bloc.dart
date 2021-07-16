@@ -1,6 +1,6 @@
-import 'package:acceptwire/data/podo/app_config_podo.dart';
-import 'package:acceptwire/data/repository/auth_repository.dart';
-import 'package:acceptwire/data/repository/meta_repository.dart';
+import 'package:acceptwire/podo/app_config_podo.dart';
+import 'package:acceptwire/repository/auth_repository.dart';
+import 'package:acceptwire/repository/meta_repository.dart';
 import 'package:acceptwire/logic/meta_bloc/metadata_event.dart';
 import 'package:acceptwire/logic/meta_bloc/metadata_state.dart';
 import 'package:acceptwire/utils/helpers/helpers.dart';
