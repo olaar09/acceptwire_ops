@@ -1,17 +1,44 @@
 import 'package:acceptwire/podo/app_config_podo.dart';
+import 'package:equatable/equatable.dart';
+import 'package:sealed_unions/sealed_unions.dart';
 
-abstract class MetaDataState {}
+class MetaDataState extends Union3Impl<_MetaDataLoadingState,
+    _MetaDataLoadedState, _MetaDataErrorState> {
+  // PRIVATE low-level factory
+  // Used for instantiating individual "subclasses"
+  static final Triplet<_MetaDataLoadingState, _MetaDataLoadedState,
+          _MetaDataErrorState> _factory =
+      const Triplet<_MetaDataLoadingState, _MetaDataLoadedState,
+          _MetaDataErrorState>();
 
-class MetaDataLoadingState extends MetaDataState {}
+  // PRIVATE constructor which takes in the individual weather states
+  MetaDataState._(
+    Union3<_MetaDataLoadingState, _MetaDataLoadedState, _MetaDataErrorState>
+        union,
+  ) : super(union);
 
-class MetaDataLoadedState extends MetaDataState {
-  final AppConfig appConfig;
+  // PUBLIC factories which hide the complexity from outside classes
+  factory MetaDataState.loading() =>
+      MetaDataState._(_factory.first(_MetaDataLoadingState()));
 
-  MetaDataLoadedState({required this.appConfig});
+  factory MetaDataState.loaded({required AppConfig appConfig}) =>
+      MetaDataState._(
+          _factory.second(_MetaDataLoadedState(appConfig: appConfig)));
+
+  factory MetaDataState.error({required String message}) =>
+      MetaDataState._(_factory.third(_MetaDataErrorState(message: message)));
 }
 
-class MetaDataErrorState extends MetaDataState {
-  String message;
+class _MetaDataLoadingState {}
 
-  MetaDataErrorState({required this.message});
+class _MetaDataLoadedState {
+  final AppConfig appConfig;
+
+  _MetaDataLoadedState({required this.appConfig});
+}
+
+class _MetaDataErrorState {
+  final String message;
+
+  _MetaDataErrorState({required this.message});
 }

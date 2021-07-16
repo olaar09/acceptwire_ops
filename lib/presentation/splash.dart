@@ -1,6 +1,7 @@
 import 'package:acceptwire/logic/auth_bloc/auth_bloc.dart';
 import 'package:acceptwire/logic/auth_bloc/auth_states.dart';
 import 'package:acceptwire/logic/meta_bloc/bloc.dart';
+import 'package:acceptwire/logic/meta_bloc/metadata_state.dart';
 import 'package:acceptwire/utils/helpers/get_value.dart';
 import 'package:acceptwire/utils/helpers/navigation.dart';
 import 'package:acceptwire/utils/helpers/widget.dart';
@@ -30,10 +31,8 @@ class SplashScreen extends StatelessWidget {
               ),
             ),
           ),
-          state is MetaDataLoadingState
-              ? networkActivityIndicator()
-              : emptyState(),
-          state is MetaDataErrorState ? Text(state.message) : emptyState(),
+          state.join((loading) => networkActivityIndicator(),
+              (loaded) => emptyState(), (error) => Text(error.message)),
           SizedBox(
             height: 20,
           )
@@ -49,13 +48,17 @@ class SplashScreen extends StatelessWidget {
           listeners: [
             BlocListener<AuthBloc, AuthenticationState>(
                 listener: (context, authState) {
-              if (authState is UserAuthenticated &&
-                  _metaBloc.state is MetaDataLoadedState) {
-                navOfAllPage(context: context, route: '/library');
+              if (authState is UserAuthenticated) {
+                _metaBloc.state.join(
+                    (loading) => null,
+                    (loaded) =>
+                        {navOfAllPage(context: context, route: '/library')},
+                    (error) => null);
               }
-              if (authState is UserUnAuthenticated &&
-                  _metaBloc.state is MetaDataLoadedState) {
-                navOfAllPage(context: context, route: '/onboard');
+              if (authState is UserUnAuthenticated) {
+                _metaBloc.state.join((loading) => null, (loaded) {
+                  navOfAllPage(context: context, route: '/onboard');
+                }, (error) => null);
               }
             }),
           ],
