@@ -24,8 +24,8 @@ class SplashScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Container(
-                  child: normalSize('assets/images/playbutton.png',
-                      height: 140, width: 140),
+                  child: normalSize('assets/images/acceptwirelogo.png',
+                      height: 80, width: 80),
                 ),
               ),
             ),

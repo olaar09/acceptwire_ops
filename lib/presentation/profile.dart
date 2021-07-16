@@ -58,7 +58,7 @@ class ProfilePage extends StatelessWidget {
                               SizedBox(
                                 height: 25,
                               ),
-                              boldText('${state.user?.displayName}'),
+                              boldText('${state.user.displayName}'),
                               regularText('Student',
                                   size: 13,
                                   color:
@@ -66,7 +66,7 @@ class ProfilePage extends StatelessWidget {
                               SizedBox(
                                 height: 20,
                               ),
-                              boldText('${state.user?.email}', size: 16),
+                              boldText('${state.user.email}', size: 16),
                               SizedBox(
                                 height: 35,
                               ),
@@ -82,7 +82,6 @@ class ProfilePage extends StatelessWidget {
                   primaryButton('Logout', vertical: 10, onPressed: () async {
                     context.read<AuthBloc>().fireLoggedOutEvent();
                   })
-
                   // Add widgets for verifying email
                   // and, signing out the user
                 ],

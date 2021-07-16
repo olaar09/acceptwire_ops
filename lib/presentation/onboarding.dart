@@ -19,7 +19,12 @@ class OnBoarding extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          iconsSize('$imagePath'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              iconsSize('$imagePath', size: 35),
+            ],
+          ),
           SizedBox(
             width: 15,
           ),
@@ -48,15 +53,15 @@ class OnBoarding extends StatelessWidget {
                             fontWeight: FontWeight.w900,
                             color: Vl.color(color: MColor.K_PRIMARY_MAIN)),
                         splashHighlightItem(
-                            imagePath: 'assets/images/ply.png',
+                            imagePath: 'assets/images/thunderbolt.png',
                             text:
                                 'Watch recorded class lectures unlimited times after class'),
                         splashHighlightItem(
-                            imagePath: 'assets/images/connection.png',
-                            text: 'Collaborate with classmates and teachers'),
-                        splashHighlightItem(
-                            imagePath: 'assets/images/reading.png',
+                            imagePath: 'assets/images/bill.png',
                             text: 'Learn on your own terms & in your own time'),
+                        splashHighlightItem(
+                            imagePath: 'assets/images/onlineshopping.png',
+                            text: 'Collaborate with classmates and teachers'),
                       ],
                     ),
                     height: 300,
