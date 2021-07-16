@@ -74,7 +74,7 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
     } catch (e) {
       print(e);
       yield AuthenticationState.loginAttemptFailed(
-          message: 'An unknown error happened. Please check your internet');
+          message: 'An unknown error happened.  check your internet');
     }
   }
 
@@ -121,26 +121,26 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
     if (event is SignUpAttemptEvent) {
       if (GetUtils.isNullOrBlank(event.authData.firstName)!) {
         yield AuthenticationState.validationFailed(
-            genericError: 'Please enter your first name',
-            firstNameError: 'Please enter your first name');
+            genericError: 'Enter your first name',
+            firstNameError: ' Enter your first name');
         throw FormatException();
       }
       if (GetUtils.isNullOrBlank(event.authData.lastName)!) {
         yield AuthenticationState.validationFailed(
-            genericError: 'Please enter your last name',
-            firstNameError: 'Please enter your last name');
+            genericError: ' Enter your last name',
+            firstNameError: ' Enter your last name');
         throw FormatException();
       }
       if (GetUtils.isNullOrBlank(event.authData.phone)!) {
         yield AuthenticationState.validationFailed(
-            genericError: 'Please enter your your phone number',
-            firstNameError: 'Please enter your phone number');
+            genericError: ' Enter your your phone number',
+            firstNameError: ' Enter your phone number');
         throw FormatException();
       }
       if (GetUtils.isNullOrBlank(event.authData.bvnNumber)!) {
         yield AuthenticationState.validationFailed(
-            genericError: 'Please enter your bvn  number',
-            firstNameError: 'Please enter your bvn');
+            genericError: ' Enter your bvn  number',
+            firstNameError: ' Enter your bvn');
         throw FormatException();
       }
     }
@@ -149,15 +149,15 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
       if (GetUtils.isNullOrBlank(event.authData.email)! ||
           !GetUtils.isEmail('${event.authData.email}')) {
         yield AuthenticationState.validationFailed(
-            genericError: 'Please enter a valid  email address',
-            emailError: 'Please provide a valid email address');
+            genericError: ' Enter a valid  email address',
+            emailError: ' Provide a valid email address');
         throw FormatException();
       }
 
       if (GetUtils.isNullOrBlank(event.authData.password)!) {
         yield AuthenticationState.validationFailed(
-            genericError: 'Please provide a password',
-            passwordError: 'Please provide a password');
+            genericError: ' Provide a password',
+            passwordError: ' Provide a password');
         throw FormatException();
       }
     }
