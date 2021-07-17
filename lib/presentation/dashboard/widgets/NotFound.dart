@@ -44,7 +44,7 @@ class NotFoundForm extends StatelessWidget {
                     boldText('Create a profile'),
                   ],
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 20),
                 mTextField('Phone number',
                     onChanged: (text) {},
                     controller: _emailTextController,

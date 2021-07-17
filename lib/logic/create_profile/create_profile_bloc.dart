@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:acceptwire/podo/profile_podo.dart';
 import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -24,8 +25,14 @@ class CreateProfileBloc extends Cubit<CreateProfileState> {
     }
 
     try {
-      await repository.createProfileAfterSignUp(phoneNumber: phoneNumber);
-      this.emit(CreateProfileState.created());
+      var response =
+          await repository.createProfileAfterSignUp(phoneNumber: phoneNumber);
+      if (response is ProfilePODO) {
+        this.emit(CreateProfileState.created());
+      } else {
+        this.emit(CreateProfileState.error(
+            message: 'An error occurred, please try later'));
+      }
     } catch (e) {
       this.emit(CreateProfileState.error(message: 'An error occurred'));
     }
