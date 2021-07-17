@@ -1,60 +1,53 @@
-/*
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:acceptwire/podo/profile_podo.dart';
+import 'package:acceptwire/repository/auth_repository.dart';
+import 'package:acceptwire/utils/helpers/rest_client.dart';
+import 'package:dio/dio.dart';
 
 class ProfileRepository {
-  final FirebaseFirestore _fireStore;
-  final User? user;
-  late final CollectionReference _mainCollection;
+  final Dio _restClient;
 
-  ProfileRepository({FirebaseFirestore? fireStore, required this.user})
-      : _fireStore = fireStore ?? FirebaseFirestore.instance {
-    _mainCollection = _fireStore.collection('profiles');
+  ProfileRepository({required Dio restClient}) : _restClient = restClient;
+
+  Future getProfile() async {
+    try {
+      Response response = await _restClient.get('/merchant');
+
+      RequestResponse parseResponse = response.data;
+      return ProfilePODO.fromJson(parseResponse.data);
+    } on DioError catch (e) {
+      return e.error.reason;
+    } catch (e) {
+      return e.toString();
+    }
   }
 
-  Future<void> updateClasses({
-    required String title,
-    required String description,
-  }) async {
-    DocumentReference documentReferencer =
-    _mainCollection.doc(user!.uid).collection('classes').doc();
+  Future attemptVerification({firstName, lastName, bvn}) async {
+    try {
+      Response response = await _restClient.put('/merchant',
+          data: {'lastName': lastName, 'firstName': firstName, 'bvn': bvn});
 
-    Map<String, dynamic> data = <String, dynamic>{
-      "classes": [1, 2, 3],
-      "phone": '08104581225',
-      "location": "lagos"
-    };
-
-    await documentReferencer
-        .set(data)
-        .whenComplete(() => print("Profile item added to the database"))
-        .catchError((e) => print(e));
+      RequestResponse parseResponse = response.data;
+      return ProfilePODO.fromJson(parseResponse.data);
+    } on DioError catch (e) {
+      return e.error.reason;
+    } catch (e) {
+      return e.toString();
+    }
   }
 
+  Future createProfileAfterSignUp({required phoneNumber}) async {
+    try {
+      Response response = await _restClient.post(
+        '/merchant',
+        data: {'type': 'phoneData', 'Phone': phoneNumber},
+      );
 
-  Future<void> updateBio({
-    required String title,
-    required String description,
-  }) async {
-    DocumentReference documentReferencer =
-    _mainCollection.doc(user!.uid).collection('classes').doc();
-
-    Map<String, dynamic> data = <String, dynamic>{
-      "phone": '08104581225',
-      "location": "lagos"
-    };
-
-    await documentReferencer
-        .set(data)
-        .whenComplete(() => print("Profile item added to the database"))
-        .catchError((e) => print(e));
-  }
-
-  Stream<QuerySnapshot> readItems() {
-    CollectionReference notesItemCollection =
-    _mainCollection.doc(user!.uid).collection('items');
-
-    return notesItemCollection.snapshots();
+      RequestResponse parseResponse = response.data;
+      return ProfilePODO.fromJson(parseResponse.data);
+    } on DioError catch (e) {
+      return e.error.reason;
+    } catch (e) {
+      return e.toString();
+    }
   }
 }
-*/

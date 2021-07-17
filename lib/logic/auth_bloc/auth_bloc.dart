@@ -1,3 +1,4 @@
+import 'package:acceptwire/logic/profile/profile_bloc.dart';
 import 'package:acceptwire/podo/login_podo.dart';
 import 'package:acceptwire/repository/auth_repository.dart';
 import 'package:acceptwire/repository/meta_repository.dart';
@@ -8,13 +9,11 @@ import 'bloc.dart';
 
 class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AuthRepository _authRepository;
-  final MetaDataRepo _metadataRepository;
 
-  AuthBloc(
-      {required AuthRepository authRepository,
-      required MetaDataRepo metaDataRepo})
+  //final ProfileBloc _profileBloc;
+
+  AuthBloc({required AuthRepository authRepository})
       : _authRepository = authRepository,
-        _metadataRepository = metaDataRepo,
         super(AuthenticationState.userUnAuthenticated());
 
   @override
@@ -43,7 +42,7 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
     bool forceStop = false;
     try {
       yield AuthenticationState.loading();
-      yield* _runValidations(event).handleError((error) {
+      yield* _runAuthValidations(event).handleError((error) {
         forceStop = true;
         return;
       });
@@ -84,7 +83,7 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
     try {
       yield AuthenticationState.loading();
 
-      yield* _runValidations(event).handleError((error) {
+      yield* _runAuthValidations(event).handleError((error) {
         forceStop = true;
         return;
       });
@@ -101,6 +100,7 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
       user = await _authRepository.updateDisplayName(
           '${event.authData.firstName} ${event.authData.lastName}');
 
+      yield AuthenticationState.signUpAttemptSucceed(authData: event.authData);
       yield AuthenticationState.userAuthenticated(user: user!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -117,7 +117,7 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
     }
   }
 
-  Stream<AuthenticationState> _runValidations(event) async* {
+  Stream<AuthenticationState> _runVerificationValidations(event) async* {
     if (event is SignUpAttemptEvent) {
       if (GetUtils.isNullOrBlank(event.authData.firstName)!) {
         yield AuthenticationState.validationFailed(
@@ -131,16 +131,22 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
             firstNameError: ' Enter your last name');
         throw FormatException();
       }
-      if (GetUtils.isNullOrBlank(event.authData.phone)!) {
-        yield AuthenticationState.validationFailed(
-            genericError: ' Enter your your phone number',
-            firstNameError: ' Enter your phone number');
-        throw FormatException();
-      }
+
       if (GetUtils.isNullOrBlank(event.authData.bvnNumber)!) {
         yield AuthenticationState.validationFailed(
             genericError: ' Enter your bvn  number',
             firstNameError: ' Enter your bvn');
+        throw FormatException();
+      }
+    }
+  }
+
+  Stream<AuthenticationState> _runAuthValidations(event) async* {
+    if (event is SignUpAttemptEvent) {
+      if (GetUtils.isNullOrBlank(event.authData.phone)!) {
+        yield AuthenticationState.validationFailed(
+            genericError: ' Enter your your phone number',
+            phoneError: ' Enter your phone number');
         throw FormatException();
       }
     }
@@ -196,19 +202,19 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   }
 
   fireRegisterEvent(
-      {required firstName,
-      required lastName,
+      { //required firstName,
+      // required lastName,
       required phone,
-      required bvn,
+      //  required bvn,
       required password,
       required email}) {
     this.add(SignUpAttemptEvent(
         authData: AuthData.signUp(
             email: email,
             password: password,
-            firstName: firstName,
-            bvnNumber: bvn,
-            lastName: lastName,
+            // firstName: firstName,
+            // bvnNumber: bvn,
+            //  lastName: lastName,
             phone: phone)));
   }
 

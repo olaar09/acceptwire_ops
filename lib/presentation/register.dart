@@ -32,23 +32,21 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
 
-  final _focusName = FocusNode();
+  final _focusPhone = FocusNode();
   final _focusEmail = FocusNode();
   final _focusPassword = FocusNode();
 
-  bool _isProcessing = false;
-
-  actionButton(authBloc) {
+  actionButton(AuthBloc authBloc) {
     return Row(
       children: [
         Expanded(
           child: primaryButton('Sign Up', vertical: 14, onPressed: () async {
             authBloc.fireRegisterEvent(
-                firstName: _firstNameTextController.text,
+                //  firstName: _firstNameTextController.text,
                 email: _emailTextController.text,
-                lastName: _lastNameTextController.text,
+                // lastName: _lastNameTextController.text,
                 phone: _phoneTextController.text,
-                bvn: _bvnTextController.text,
+                // bvn: _bvnTextController.text,
                 password: _passwordTextController.text);
           }),
         ),
@@ -62,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     return GestureDetector(
       onTap: () {
-        _focusName.unfocus();
+        _focusPhone.unfocus();
         _focusEmail.unfocus();
         _focusPassword.unfocus();
       },
@@ -88,17 +86,16 @@ class _RegisterPageState extends State<RegisterPage> {
               BlocConsumer<AuthBloc, AuthenticationState>(
                 listener: (context, state) {
                   state.join(
-                      (loading) => null,
-                      (validationFailed) => mSnackBar(
-                          message: validationFailed.genericError,
-                          context: context),
-                      (loginAttemptFailed) => null,
-                      (signUpAttemptFailed) => mSnackBar(
-                          message: signUpAttemptFailed.message,
-                          context: context),
-                      (unAuth) => null,
-                      (authenticated) =>
-                          navOfAllPage(context: context, route: '/library'));
+                    (loading) => null,
+                    (validationFailed) => null,
+                    (loginAttemptFailed) => null,
+                    (signUpAttemptFailed) => mSnackBar(
+                        message: signUpAttemptFailed.message, context: context),
+                    (unAuth) => null,
+                    (authenticated) =>
+                        navOfAllPage(context: context, route: '/dashboard'),
+                    (_) => null,
+                  );
                 },
                 builder: (context, state) {
                   return Form(
@@ -106,48 +103,46 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Expanded(
                       child: ListView(
                         children: <Widget>[
-                          Row(
-                            children: [
-                              Expanded(
-                                  child: mTextField('First Name',
-                                      onChanged: (text) {},
-                                      controller: _firstNameTextController,
-                                      error: '')),
-                              SizedBox(width: 10),
-                              Expanded(
-                                  child: mTextField('Last Name',
-                                      onChanged: (text) {},
-                                      controller: _lastNameTextController,
-                                      error: ''))
-                            ],
-                          ),
                           SizedBox(height: 8.0),
-                          Row(
-                            children: [
-                              Expanded(
-                                  child: mTextField('Phone Number',
-                                      onChanged: (text) {},
-                                      controller: _phoneTextController,
-                                      error: '')),
-                              SizedBox(width: 10),
-                              Expanded(
-                                  child: mTextField('BVN Number',
-                                      onChanged: (text) {},
-                                      controller: _bvnTextController,
-                                      error: ''))
-                            ],
-                          ),
+                          mTextField('Phone Number',
+                              onChanged: (text) {},
+                              controller: _phoneTextController,
+                              error: state.join(
+                                  (loading) => null,
+                                  (validationFailed) =>
+                                      validationFailed.phoneError,
+                                  (loginAttemptFailed) => null,
+                                  (signUpAttemptFailed) => null,
+                                  (unAuth) => null,
+                                  (authenticated) => null,
+                                  (_) => null)),
                           SizedBox(height: 8.0),
                           mTextField('Email address',
                               onChanged: (text) {},
                               controller: _emailTextController,
-                              error: ''),
+                              error: state.join(
+                                  (loading) => null,
+                                  (validationFailed) =>
+                                      validationFailed.emailError,
+                                  (loginAttemptFailed) => null,
+                                  (signUpAttemptFailed) => null,
+                                  (unAuth) => null,
+                                  (authenticated) => null,
+                                  (_) => null)),
                           SizedBox(height: 8.0),
                           mTextField('Password',
                               isPassword: true,
                               onChanged: (text) {},
                               controller: _passwordTextController,
-                              error: ''),
+                              error: state.join(
+                                  (loading) => null,
+                                  (validationFailed) =>
+                                      validationFailed.passwordError,
+                                  (loginAttemptFailed) => null,
+                                  (signUpAttemptFailed) => null,
+                                  (unAuth) => null,
+                                  (authenticated) => null,
+                                  (_) => null)),
                           SizedBox(height: 32.0),
                           state.join(
                               (loading) => networkActivityIndicator(),
@@ -155,7 +150,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               (loginAttemptFailed) => emptyState(),
                               (signUpAttemptFailed) => actionButton(authBloc),
                               (unAuth) => actionButton(authBloc),
-                              (authenticated) => actionButton(authBloc))
+                              (authenticated) => actionButton(authBloc),
+                              (_) => emptyState())
                         ],
                       ),
                     ),

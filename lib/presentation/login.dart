@@ -75,7 +75,8 @@ class LoginPage extends StatelessWidget {
               (signUpAttemptFailed) => null,
               (unAuth) => null,
               (authenticated) =>
-                  navOfAllPage(context: context, route: '/dashboard'));
+                  navOfAllPage(context: context, route: '/dashboard'),
+              (_) => null);
         },
         builder: (context, state) {
           return Padding(
@@ -100,21 +101,21 @@ class LoginPage extends StatelessWidget {
                           (loginAttemptFailed) => null,
                           (signUpAttemptFailed) => null,
                           (unAuth) => null,
-                          (authenticated) => null)),
+                          (authenticated) => null,
+                          (_) => null)),
                   SizedBox(height: 8.0),
-                  mTextField(
-                    'Password',
-                    isPassword: true,
-                    onChanged: (text) {},
-                    controller: _passwordTextController,
-                    error: state.join(
-                        (loading) => null,
-                        (validationFailed) => validationFailed.passwordError,
-                        (loginAttemptFailed) => null,
-                        (signUpAttemptFailed) => null,
-                        (unAuth) => null,
-                        (authenticated) => null),
-                  ),
+                  mTextField('Password',
+                      isPassword: true,
+                      onChanged: (text) {},
+                      controller: _passwordTextController,
+                      error: state.join(
+                          (loading) => null,
+                          (validationFailed) => validationFailed.passwordError,
+                          (loginAttemptFailed) => null,
+                          (signUpAttemptFailed) => null,
+                          (unAuth) => null,
+                          (authenticated) => null,
+                          (signUpSucceded) => null)),
                   SizedBox(
                     height: 30,
                   ),
@@ -124,7 +125,8 @@ class LoginPage extends StatelessWidget {
                       (loginAttemptFailed) => actionButtons(context, authBloc),
                       (signUpAttemptFailed) => actionButtons(context, authBloc),
                       (unAuth) => actionButtons(context, authBloc),
-                      (authenticated) => actionButtons(context, authBloc))
+                      (authenticated) => actionButtons(context, authBloc),
+                      (signUpSucceded) => actionButtons(context, authBloc))
                 ],
               ),
             ),

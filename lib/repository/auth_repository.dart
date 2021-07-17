@@ -1,14 +1,10 @@
-import 'package:acceptwire/utils/helpers/rest_client.dart';
-import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthRepository {
   final FirebaseAuth _firebaseAuth;
-  final Dio _restClient;
 
-  AuthRepository({FirebaseAuth? firebaseAuth, required Dio restClient})
-      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _restClient = restClient;
+  AuthRepository({FirebaseAuth? firebaseAuth})
+      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   Future<UserCredential> signInWithCredentials(
       String email, String password) async {
@@ -55,7 +51,8 @@ class AuthRepository {
     return _firebaseAuth.currentUser;
   }
 
-  Future<User?> updateMerchantProfile(String name) async {
-    await _restClient.post('');
+  Future<String?> getToken() async {
+    if (await isSignedIn())
+      return await _firebaseAuth.currentUser!.getIdToken();
   }
 }

@@ -46,7 +46,7 @@ primaryButton(
   Function? onPressed,
   bool loading = false,
   double vertical: 20,
-  fontSize: 18.0,
+  double fontSize: 16.0,
   double horizontal: 12.0,
 }) {
   var cl = Vl.color(color: MColor.K_PRIMARY_MAIN);

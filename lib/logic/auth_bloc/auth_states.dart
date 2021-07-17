@@ -1,40 +1,45 @@
+import 'package:acceptwire/podo/login_podo.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sealed_unions/sealed_unions.dart';
 
-class AuthenticationState extends Union6Impl<
+class AuthenticationState extends Union7Impl<
     _AuthenticationLoading,
     _AuthDataValidationFailed,
     _LoginAttemptFailed,
     _SignUpAttemptFailed,
     _UserUnAuthenticated,
-    _UserAuthenticated> {
+    _UserAuthenticated,
+    _SignUpAttemptSucceed> {
   // PRIVATE low-level factory
   // Used for instantiating individual "subclasses"
-  static final Sextet<
+  static final Septet<
           _AuthenticationLoading,
           _AuthDataValidationFailed,
           _LoginAttemptFailed,
           _SignUpAttemptFailed,
           _UserUnAuthenticated,
-          _UserAuthenticated> _factory =
-      const Sextet<
+          _UserAuthenticated,
+          _SignUpAttemptSucceed> _factory =
+      const Septet<
           _AuthenticationLoading,
           _AuthDataValidationFailed,
           _LoginAttemptFailed,
           _SignUpAttemptFailed,
           _UserUnAuthenticated,
-          _UserAuthenticated>();
+          _UserAuthenticated,
+          _SignUpAttemptSucceed>();
 
   // PRIVATE constructor which takes in the individual weather states
   AuthenticationState._(
-      Union6<
+      Union7<
               _AuthenticationLoading,
               _AuthDataValidationFailed,
               _LoginAttemptFailed,
               _SignUpAttemptFailed,
               _UserUnAuthenticated,
-              _UserAuthenticated>
+              _UserAuthenticated,
+              _SignUpAttemptSucceed>
           union)
       : super(union);
 
@@ -73,6 +78,11 @@ class AuthenticationState extends Union6Impl<
 
   factory AuthenticationState.userAuthenticated({required User user}) =>
       AuthenticationState._(_factory.sixth(_UserAuthenticated(user: user)));
+
+  factory AuthenticationState.signUpAttemptSucceed(
+          {required AuthData authData}) =>
+      AuthenticationState._(
+          _factory.seventh(_SignUpAttemptSucceed(authData: authData)));
 }
 
 class _AuthenticationLoading extends Equatable {
@@ -147,4 +157,14 @@ class _SignUpAttemptFailed extends Equatable {
   @override
   // TODO: implement props
   List<Object?> get props => [message];
+}
+
+class _SignUpAttemptSucceed extends Equatable {
+  final AuthData authData;
+
+  _SignUpAttemptSucceed({required this.authData});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [authData];
 }

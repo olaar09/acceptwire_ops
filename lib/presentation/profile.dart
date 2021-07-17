@@ -88,13 +88,15 @@ class ProfilePage extends StatelessWidget {
       body: BlocConsumer<AuthBloc, AuthenticationState>(
         listener: (context, state) {
           state.join(
-              (loading) => null,
-              (validationFailed) => null,
-              (loginAttemptFailed) => null,
-              (signUpAttemptFailed) => null,
-              (unAuth) => navOfAllPage(context: context, route: '/login'),
-              (authenticated) =>
-                  navOfAllPage(context: context, route: '/dashboard'));
+            (loading) => null,
+            (validationFailed) => null,
+            (loginAttemptFailed) => null,
+            (signUpAttemptFailed) => null,
+            (unAuth) => navOfAllPage(context: context, route: '/login'),
+            (authenticated) =>
+                navOfAllPage(context: context, route: '/dashboard'),
+            (_) => emptyState(),
+          );
         },
         builder: (context, state) {
           return state.join(
@@ -104,6 +106,7 @@ class ProfilePage extends StatelessWidget {
             (signUpAttemptFailed) => emptyState(),
             (unAuth) => emptyState(),
             (authenticated) => showProfile(_authBloc, authenticated.user),
+            (_) => emptyState(),
           );
         },
       ),

@@ -1,3 +1,5 @@
+import 'package:acceptwire/logic/profile/profile_bloc.dart';
+import 'package:acceptwire/presentation/dashboard.dart';
 import 'package:acceptwire/repository/auth_repository.dart';
 import 'package:acceptwire/repository/meta_repository.dart';
 import 'package:acceptwire/logic/auth_bloc/bloc.dart';
@@ -7,6 +9,7 @@ import 'package:acceptwire/presentation/login.dart';
 import 'package:acceptwire/presentation/onboarding.dart';
 import 'package:acceptwire/presentation/profile.dart';
 import 'package:acceptwire/presentation/splash.dart';
+import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:acceptwire/utils/helpers/rest_client.dart';
 import 'package:acceptwire/utils/helpers/theme.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -38,14 +41,23 @@ class _MyAppState extends State<MyApp> {
   late final AuthRepository _authRepository;
   late final MetaDataRepo _metaDataRepo;
   late final Connectivity connectivity;
+  late final ProfileBloc _profileBloc;
+  late final AuthBloc _authBloc;
+  late final ProfileRepository _profileRepository;
 
   @override
   void initState() {
-    _restClientRepository = RestClientRepository().init();
-    _authRepository = AuthRepository(restClient: _restClientRepository);
+    _authRepository = AuthRepository();
+    _restClientRepository =
+        RestClientRepository(authRepo: _authRepository).init();
+
+    _profileRepository = ProfileRepository(restClient: _restClientRepository);
     _metaDataRepo = MetaDataRepo();
     connectivity = Connectivity();
-
+    _authBloc = AuthBloc(authRepository: _authRepository);
+    _profileBloc =
+        ProfileBloc(authBloc: _authBloc, repository: _profileRepository);
+    //  _profileBloc = ProfileBloc(repository: _profileRepository);
     super.initState();
   }
 
@@ -61,14 +73,12 @@ class _MyAppState extends State<MyApp> {
         providers: [
           BlocProvider(
               create: (context) => NetworkBloc(connectivity: connectivity)),
-          BlocProvider(
-              create: (context) => AuthBloc(
-                  authRepository: _authRepository,
-                  metaDataRepo: _metaDataRepo)),
+          BlocProvider(create: (context) => _authBloc),
           BlocProvider(
               create: (context) => MetaDataBloc(
                   metaDataRepo: _metaDataRepo,
                   authRepository: _authRepository)),
+          BlocProvider(create: (context) => _profileBloc),
         ],
         child: MaterialApp(
           title: 'acceptwire',
@@ -91,6 +101,8 @@ class _MyAppState extends State<MyApp> {
         return MaterialPageRoute(builder: (_) => OnBoarding());
       case '/profile':
         return MaterialPageRoute(builder: (_) => ProfilePage());
+      case '/dashboard':
+        return MaterialPageRoute(builder: (_) => Dashboard());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

@@ -43,7 +43,7 @@ class SplashScreen extends StatelessWidget {
     void navigateToDashboard() {
       _metaBloc.state.join(
           (loading) => null,
-          (loaded) => {navOfAllPage(context: context, route: '/profile')},
+          (loaded) => {navOfAllPage(context: context, route: '/dashboard')},
           (error) => null);
     }
 
@@ -69,7 +69,7 @@ class SplashScreen extends StatelessWidget {
                 navigateToOnboard();
               }, (authenticated) {
                 navigateToDashboard();
-              });
+              }, (_) => null);
             }),
           ],
           child: BlocBuilder<MetaDataBloc, MetaDataState>(
