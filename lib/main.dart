@@ -1,5 +1,5 @@
 import 'package:acceptwire/logic/profile/profile_bloc.dart';
-import 'package:acceptwire/presentation/dashboard.dart';
+import 'package:acceptwire/presentation/dashboard/dashboard.dart';
 import 'package:acceptwire/repository/auth_repository.dart';
 import 'package:acceptwire/repository/meta_repository.dart';
 import 'package:acceptwire/logic/auth_bloc/bloc.dart';
@@ -67,7 +67,8 @@ class _MyAppState extends State<MyApp> {
       providers: [
         RepositoryProvider(create: (context) => _authRepository),
         RepositoryProvider(create: (context) => _metaDataRepo),
-        RepositoryProvider(create: (context) => _restClientRepository)
+        RepositoryProvider(create: (context) => _restClientRepository),
+        RepositoryProvider(create: (context) => _profileRepository),
       ],
       child: MultiBlocProvider(
         providers: [

@@ -69,8 +69,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         yield ProfileState.loaded(profile: response);
       }
     } else {
-      print(response);
-      if (response == '404') {
+      if (response == 'Error No user found') {
         yield ProfileState.notFound(message: 'try again');
       } else {
         yield ProfileState.loading(hasError: true);

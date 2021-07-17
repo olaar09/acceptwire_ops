@@ -1,7 +1,9 @@
 import 'package:acceptwire/logic/profile/profile_bloc.dart';
+import 'package:acceptwire/presentation/dashboard/widgets/NotFound.dart';
+import 'package:acceptwire/presentation/dashboard/widgets/NotVerifiedForm.dart';
+import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:acceptwire/utils/helpers/buttons.dart';
 import 'package:acceptwire/utils/helpers/get_value.dart';
-import 'package:acceptwire/utils/helpers/navigation.dart';
 import 'package:acceptwire/utils/helpers/text.dart';
 import 'package:acceptwire/utils/widgets/loading.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
 
 class Dashboard extends StatelessWidget {
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
+
   @override
   Widget build(BuildContext buildContext) {
     ProfileBloc _profileBloc = buildContext.read<ProfileBloc>();
@@ -37,6 +42,17 @@ class Dashboard extends StatelessWidget {
           ));
     }
 
+    loadingWidget(loading) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          loading.hasError
+              ? loadingError()
+              : Center(child: networkActivityIndicator()),
+        ],
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -57,23 +73,16 @@ class Dashboard extends StatelessWidget {
             child: Container(
               child: profileState.join(
                 (loading) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      loading.hasError
-                          ? loadingError()
-                          : Center(child: networkActivityIndicator()),
-                    ],
-                  );
+                  return loadingWidget(loading);
                 },
                 (notActivated) {
                   return Text('not activated ');
                 },
                 (notVerified) {
-                  return Text('not verified ');
+                  return NotVerifiedForm();
                 },
                 (notFound) {
-                  return Text('profile not found');
+                  return NotFoundForm();
                 },
                 (loaded) {
                   return Text('loaded');

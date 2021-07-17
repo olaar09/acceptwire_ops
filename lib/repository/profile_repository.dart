@@ -19,9 +19,10 @@ class ProfileRepository {
       }
       throw RequestResponseException(cause: 'Error ${parseResponse.reason}');
     } on DioError catch (e) {
-      return e.error.reason;
+      return e.error;
+    } on RequestResponseException catch (e) {
+      return e.cause;
     } catch (e) {
-      print(e.toString());
       return e.toString();
     }
   }

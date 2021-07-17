@@ -53,6 +53,10 @@ class AuthRepository {
 
   Future<String?> getToken() async {
     if (await isSignedIn())
-      return await _firebaseAuth.currentUser!.getIdToken();
+      try {
+        return await _firebaseAuth.currentUser!.getIdToken();
+      } catch (e) {
+        _firebaseAuth.signOut();
+      }
   }
 }
