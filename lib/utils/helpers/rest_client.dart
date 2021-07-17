@@ -7,6 +7,7 @@ import 'package:get/get.dart' as gt;
 class RequestResponse<T> {
   static const STATUS_SUCCESS = "success";
   static const STATUS_FAIL = "failed";
+  static const STATUS_OK = 200;
 
   String? status;
   int? statusCode;
@@ -19,12 +20,12 @@ class RequestResponse<T> {
   RequestResponse._({this.status, this.statusCode, this.data, this.reason});
 
   factory RequestResponse.fromJson(Map<String, dynamic> json) {
-    if (json['statusCode'] != 200) {
-      throw RequestResponseException(
-          cause: json.containsKey('message')
-              ? "${json['statusCode']} json['message']"
-              : 'Unmarked error occurred: ${json['statusCode']} ');
-    }
+    // if (json['statusCode'] != 200) {
+    //   throw RequestResponseException(
+    //       cause: json.containsKey('message')
+    //           ? "${json['statusCode']} json['message']"
+    //           : 'Unmarked error occurred: ${json['statusCode']} ');
+    // }
     return new RequestResponse._(
       status: 'success',
       statusCode: json['statusCode'],

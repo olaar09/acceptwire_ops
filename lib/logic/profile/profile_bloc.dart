@@ -56,7 +56,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Stream<ProfileState> doFetchProfile() async* {
-    print('hereo');
     yield ProfileState.loading(hasError: false);
 
     var response = await repository.getProfile();

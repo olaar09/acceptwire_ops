@@ -1,3 +1,4 @@
+import 'package:acceptwire/exceptions/RequestResponseException.dart';
 import 'package:acceptwire/podo/profile_podo.dart';
 import 'package:acceptwire/repository/auth_repository.dart';
 import 'package:acceptwire/utils/helpers/rest_client.dart';
@@ -13,10 +14,14 @@ class ProfileRepository {
       Response response = await _restClient.get('/merchant');
 
       RequestResponse parseResponse = response.data;
-      return ProfilePODO.fromJson(parseResponse.data);
+      if (parseResponse.statusCode == RequestResponse.STATUS_OK) {
+        return ProfilePODO.fromJson(parseResponse.data);
+      }
+      throw RequestResponseException(cause: 'Error ${parseResponse.reason}');
     } on DioError catch (e) {
       return e.error.reason;
     } catch (e) {
+      print(e.toString());
       return e.toString();
     }
   }
