@@ -1,3 +1,5 @@
+import 'package:acceptwire/logic/auth_bloc/auth_bloc.dart';
+import 'package:acceptwire/logic/auth_bloc/bloc.dart';
 import 'package:acceptwire/logic/profile/profile_bloc.dart';
 import 'package:acceptwire/presentation/dashboard/widgets/NotFound.dart';
 import 'package:acceptwire/presentation/dashboard/widgets/NotVerifiedForm.dart';
@@ -5,9 +7,12 @@ import 'package:acceptwire/presentation/dashboard/widgets/Verified.dart';
 import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:acceptwire/utils/helpers/buttons.dart';
 import 'package:acceptwire/utils/helpers/get_value.dart';
+import 'package:acceptwire/utils/helpers/navigation.dart';
 import 'package:acceptwire/utils/helpers/text.dart';
+import 'package:acceptwire/utils/widgets/error.dart';
 import 'package:acceptwire/utils/widgets/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
 
@@ -55,11 +60,7 @@ class Dashboard extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: leadingBtn(buildContext),
-        backgroundColor: Vl.color(color: MColor.K_LIGHT_PLAIN),
-      ),
+      appBar: buildAppBar(buildContext),
       body: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
           print('inside the dashboard');
@@ -106,6 +107,74 @@ class Dashboard extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  AppBar buildAppBar(BuildContext buildContext) {
+    AuthBloc _authBloc = buildContext.read<AuthBloc>();
+
+    return AppBar(
+      elevation: 0,
+      leading: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, state) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: state.join(
+              (_) => emptyState(),
+              (_) => emptyState(),
+              (_) => emptyState(),
+              (_) => emptyState(),
+              (profileLoaded) => CircleAvatar(
+                backgroundColor: Vl.color(color: MColor.K_PRIMARY_MAIN),
+                backgroundImage: AssetImage('assets/images/hi.png'),
+              ),
+              (_) => emptyState(),
+            ),
+          );
+        },
+      ),
+      titleSpacing: 2,
+      title: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, state) {
+          return state.join(
+            (_) => emptyState(),
+            (_) => emptyState(),
+            (_) => emptyState(),
+            (_) => emptyState(),
+            (profileLoaded) => regularText(
+                'Hi, ${profileLoaded.profilePODO.firstName} ${profileLoaded.profilePODO.lastName}',
+                size: 16),
+            (_) => emptyState(),
+          );
+        },
+      ),
+      centerTitle: false,
+      backgroundColor: Vl.color(color: MColor.K_LIGHT_PLAIN),
+      actions: [
+        BlocConsumer<AuthBloc, AuthenticationState>(builder: (context, state) {
+          return state.join(
+            (_) => emptyState(),
+            (_) => emptyState(),
+            (_) => emptyState(),
+            (_) => emptyState(),
+            (_) => emptyState(),
+            (authenticated) => TextButton(
+                onPressed: () => _authBloc.fireLoggedOutEvent(),
+                child: regularText('Logout', size: 16)),
+            (_) => emptyState(),
+          );
+        }, listener: (_, state) {
+          state.join(
+            (_) => emptyState(),
+            (_) => emptyState(),
+            (_) => emptyState(),
+            (_) => emptyState(),
+            (_) => navOfAllPage(context: buildContext, route: '/onboard'),
+            (_) => emptyState(),
+            (_) => emptyState(),
+          );
+        }),
+      ],
     );
   }
 }

@@ -22,6 +22,7 @@ class ProfilePODO {
         phone: map['Phone'],
         emailAddress: map['Email'],
         firstName: map['FirstName'],
+        lastName: map['LastName'],
         bvn: map['BVN'],
         verified: map['Verified'],
         activated: map['Activated']);
