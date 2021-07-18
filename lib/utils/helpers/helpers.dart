@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 bool blankOrNull(dynamic obj) {
   var checkBlank = GetUtils.isNullOrBlank(obj);
@@ -46,4 +47,27 @@ Future<String> getFilePath(uniqueFileName) async {
 
 bool checkFileExists(String path) {
   return FileSystemEntity.typeSync(path) != FileSystemEntityType.notFound;
+}
+
+DateTime getTimeObj(String dateTimeString) {
+  return DateTime.parse(dateTimeString);
+}
+
+getTimeOnly(DateTime dateTime) {
+  return DateFormat.Hms().format(dateTime);
+}
+
+formatTimeDate(DateTime dateTime) {
+  return DateFormat('yy.MM.dd').format(dateTime); //kk:mm
+}
+
+bool hasTimeExpired(time) {
+  var now = new DateTime.now();
+  return getTimeObj(time).isBefore(now);
+}
+
+
+formatMoney(number) {
+  final oCcy = new NumberFormat("#,##0.00", "en_US");
+  return '₦${oCcy.format(number)}';
 }

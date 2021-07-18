@@ -1,25 +1,23 @@
 import 'package:acceptwire/logic/auth_bloc/auth_bloc.dart';
 import 'package:acceptwire/logic/auth_bloc/bloc.dart';
 import 'package:acceptwire/logic/profile/profile_bloc.dart';
+import 'package:acceptwire/presentation/dashboard/widgets/Home.dart';
 import 'package:acceptwire/presentation/dashboard/widgets/NotFound.dart';
 import 'package:acceptwire/presentation/dashboard/widgets/NotVerifiedForm.dart';
 import 'package:acceptwire/presentation/dashboard/widgets/Verified.dart';
-import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:acceptwire/utils/helpers/buttons.dart';
 import 'package:acceptwire/utils/helpers/get_value.dart';
 import 'package:acceptwire/utils/helpers/navigation.dart';
 import 'package:acceptwire/utils/helpers/text.dart';
 import 'package:acceptwire/utils/widgets/error.dart';
 import 'package:acceptwire/utils/widgets/loading.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
 
 class Dashboard extends StatelessWidget {
-  final _emailTextController = TextEditingController();
-  final _passwordTextController = TextEditingController();
-
   @override
   Widget build(BuildContext buildContext) {
     ProfileBloc _profileBloc = buildContext.read<ProfileBloc>();
@@ -73,7 +71,6 @@ class Dashboard extends StatelessWidget {
                   (initial) => _profileBloc.fireLoadProfile());
             },
             child: Container(
-              color: Colors.white,
               child: profileState.join(
                 (loading) {
                   return loadingWidget(loading);
@@ -97,7 +94,10 @@ class Dashboard extends StatelessWidget {
                   );
                 },
                 (loaded) {
-                  return Text('loaded');
+                  return BlocProvider.value(
+                    value: _profileBloc,
+                    child: Home(),
+                  );
                 },
                 (initial) {
                   return Center(child: networkActivityIndicator());
