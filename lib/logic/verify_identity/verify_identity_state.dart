@@ -20,10 +20,10 @@ class VerifyIdentityState
       VerifyIdentityState._(_factory.second(_Created()));
 
   factory VerifyIdentityState.error(
-          {String? firstName,
-          String? lastName,
-          String? bvn,
-          String? genericErr}) =>
+          {String firstName = '',
+          String lastName = '',
+          String bvn = '',
+          String genericErr = ''}) =>
       VerifyIdentityState._(_factory.third(_Error(
           firstNameErr: firstName,
           lastNameErr: lastName,
