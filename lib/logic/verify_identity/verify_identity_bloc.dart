@@ -37,7 +37,6 @@ class VerifyIdentityBloc extends Cubit<VerifyIdentityState> {
       if (response is ProfilePODO) {
         this.emit(VerifyIdentityState.created());
       } else {
-        print(response);
         this.emit(VerifyIdentityState.error(
             genericErr: 'An error occurred, please try later'));
       }

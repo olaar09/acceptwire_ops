@@ -1,17 +1,19 @@
 part of 'profile_bloc.dart';
 
 @immutable
-class ProfileEvent
-    extends Union3Impl<_NeedNewProfile, _FetchProfile, _NeedVerification> {
+class ProfileEvent extends Union4Impl<_NeedNewProfile, _FetchProfile,
+    _NeedVerification, _NeedActivation> {
   // PRIVATE low-level factory
   // Used for instantiating individual "subclasses"
-  static final Triplet<_NeedNewProfile, _FetchProfile, _NeedVerification>
-      _factory =
-      const Triplet<_NeedNewProfile, _FetchProfile, _NeedVerification>();
+  static final Quartet<_NeedNewProfile, _FetchProfile, _NeedVerification,
+          _NeedActivation> _factory =
+      const Quartet<_NeedNewProfile, _FetchProfile, _NeedVerification,
+          _NeedActivation>();
 
   // PRIVATE constructor which takes in the individual weather states
   ProfileEvent._(
-      Union3<_NeedNewProfile, _FetchProfile, _NeedVerification> union)
+      Union4<_NeedNewProfile, _FetchProfile, _NeedVerification, _NeedActivation>
+          union)
       : super(union);
 
   factory ProfileEvent.needNewProfile({required String phone}) =>
@@ -22,6 +24,9 @@ class ProfileEvent
 
   factory ProfileEvent.needVerification() =>
       ProfileEvent._(_factory.third(_NeedVerification()));
+
+  factory ProfileEvent.needActivation() =>
+      ProfileEvent._(_factory.fourth(_NeedActivation()));
 }
 
 class _NeedNewProfile {
@@ -31,5 +36,7 @@ class _NeedNewProfile {
 }
 
 class _NeedVerification {}
+
+class _NeedActivation {}
 
 class _FetchProfile {}

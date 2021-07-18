@@ -40,7 +40,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       verifyIdentityState.join(
         (_) => {},
         (verified) {
-         // this.add(ProfileEvent.needVerification());
+          this.add(ProfileEvent.needActivation());
         },
         (_) => {},
         (_) => {},
@@ -115,6 +115,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       yield* doFetchProfile();
     }, (needsVerification) async* {
       yield ProfileState.notVerified();
+    }, (needActivation) async* {
+      yield ProfileState.notActivated();
     });
   }
 }

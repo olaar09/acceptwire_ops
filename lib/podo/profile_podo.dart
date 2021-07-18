@@ -13,14 +13,17 @@ class ProfilePODO {
       this.lastName,
       this.phone,
       this.emailAddress,
+      this.bvn,
       this.verified = false,
       this.activated = false});
 
   factory ProfilePODO.fromJson(Map<dynamic, dynamic> map) {
     return ProfilePODO.setData(
-      phone: map['Phone'],
-      emailAddress: map['Email'],
-      firstName: map['FirstName'],
-    );
+        phone: map['Phone'],
+        emailAddress: map['Email'],
+        firstName: map['FirstName'],
+        bvn: map['BVN'],
+        verified: map['Verified'],
+        activated: map['Activated']);
   }
 }
