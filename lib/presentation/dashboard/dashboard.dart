@@ -79,7 +79,10 @@ class Dashboard extends StatelessWidget {
                   return Text('not activated ');
                 },
                 (notVerified) {
-                  return NotVerifiedForm();
+                  return BlocProvider.value(
+                    value: _profileBloc,
+                    child: NotVerifiedForm(),
+                  );
                 },
                 (notFound) {
                   return BlocProvider.value(

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:acceptwire/logic/auth_bloc/auth_bloc.dart';
 import 'package:acceptwire/logic/auth_bloc/auth_states.dart';
 import 'package:acceptwire/logic/create_profile/create_profile_bloc.dart';
+import 'package:acceptwire/logic/verify_identity/verify_identity_bloc.dart';
 import 'package:acceptwire/podo/profile_podo.dart';
 import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:bloc/bloc.dart';
@@ -30,6 +31,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           print(signUpSuccess.authData.phone);
           fireNeedNewProfileEvent(phoneNumber: signUpSuccess.authData.phone);
         },
+      );
+    });
+  }
+
+  onVerifyProfileNav(VerifyIdentityBloc verifyIdentityBloc) {
+    verifyIdentityBloc.stream.listen((VerifyIdentityState verifyIdentityState) {
+      verifyIdentityState.join(
+        (_) => {},
+        (verified) {
+         // this.add(ProfileEvent.needVerification());
+        },
+        (_) => {},
+        (_) => {},
       );
     });
   }

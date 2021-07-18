@@ -34,7 +34,7 @@ class NotFoundForm extends StatelessWidget {
     return BlocConsumer<CreateProfileBloc, CreateProfileState>(
       bloc: _bloc,
       listener: (context, state) {
-        print(state);
+        //print(state);
       },
       builder: (context, state) {
         return Padding(

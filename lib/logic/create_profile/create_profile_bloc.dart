@@ -4,10 +4,7 @@ import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get/get.dart';
-import 'package:meta/meta.dart';
 import 'package:sealed_unions/sealed_unions.dart';
-
-part 'create_profile_event.dart';
 
 part 'create_profile_state.dart';
 
