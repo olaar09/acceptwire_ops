@@ -15,7 +15,21 @@ class AccountNumbers extends StatelessWidget {
         //  SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: regularText('Account numbers'),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              regularText('Account numbers'),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Icon(Icons.arrow_circle_down_rounded, size: 18),
+                  SizedBox(width: 3),
+                  regularText('transactions reflecting in less than 30 seconds',
+                      size: 12),
+                ],
+              ),
+            ],
+          ),
         ),
         Container(
           height: 90,

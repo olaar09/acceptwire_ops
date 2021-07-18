@@ -1,3 +1,4 @@
+import 'package:acceptwire/utils/helpers/helpers.dart';
 import 'package:acceptwire/utils/helpers/text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class LatestTransactions extends StatelessWidget {
                           children: [
                             Container(
                               padding: EdgeInsets.all(8.0),
-                              height: 60,
+                              height: 70,
                               child: Row(
                                 children: [
                                   CircleAvatar(
@@ -44,7 +45,15 @@ class LatestTransactions extends StatelessWidget {
                                     radius: 16,
                                   ),
                                   SizedBox(width: 10),
-                                  Text('Transaction item'),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      boldText(formatMoney(10050)),
+                                      regularText('Access bank', size: 14),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
