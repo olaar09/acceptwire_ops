@@ -29,8 +29,12 @@ class ProfileRepository {
 
   Future attemptVerification({firstName, lastName, bvn}) async {
     try {
-      Response response = await _restClient.put('/merchant',
-          data: {'lastName': lastName, 'firstName': firstName, 'bvn': bvn});
+      Response response = await _restClient.put('/merchant/verify', data: {
+        'lastName': lastName,
+        'firstName': firstName,
+        'bvn': bvn,
+        'type': 'bioData'
+      });
 
       RequestResponse parseResponse = response.data;
       return ProfilePODO.fromJson(parseResponse.data);
