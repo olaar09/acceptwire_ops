@@ -45,14 +45,37 @@ class LatestTransactions extends StatelessWidget {
                                     radius: 16,
                                   ),
                                   SizedBox(width: 10),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      boldText(formatMoney(10050)),
-                                      regularText('Access bank', size: 14),
-                                    ],
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            boldText(formatMoney(10050)),
+                                            regularText('Access bank',
+                                                size: 14),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            regularText('10/08/2021', size: 14),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Icon(Icons.receipt, size: 18),
+                                                Icon(Icons.receipt, size: 18),
+                                              ],
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
