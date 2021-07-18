@@ -73,6 +73,7 @@ flutter:
     - assets/images/invoice.png
     - assets/images/onlineshopping.png
     - assets/images/bill.png
+    - assets/images/verifying.png
 
 
 # Flutter launcher icon

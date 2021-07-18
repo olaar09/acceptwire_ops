@@ -90,7 +90,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     var response = await repository.getProfile();
     if (response is ProfilePODO) {
-      print(response.firstName);
+      print('fetched profile');
       if (!response.verified) {
         yield ProfileState.notVerified();
       } else if (!response.activated) {

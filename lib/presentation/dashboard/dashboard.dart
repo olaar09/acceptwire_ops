@@ -1,6 +1,7 @@
 import 'package:acceptwire/logic/profile/profile_bloc.dart';
 import 'package:acceptwire/presentation/dashboard/widgets/NotFound.dart';
 import 'package:acceptwire/presentation/dashboard/widgets/NotVerifiedForm.dart';
+import 'package:acceptwire/presentation/dashboard/widgets/Verified.dart';
 import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:acceptwire/utils/helpers/buttons.dart';
 import 'package:acceptwire/utils/helpers/get_value.dart';
@@ -71,12 +72,16 @@ class Dashboard extends StatelessWidget {
                   (initial) => _profileBloc.fireLoadProfile());
             },
             child: Container(
+              color: Colors.white,
               child: profileState.join(
                 (loading) {
                   return loadingWidget(loading);
                 },
                 (notActivated) {
-                  return Text('not activated ');
+                  return BlocProvider.value(
+                    value: _profileBloc,
+                    child: NotVerified(),
+                  );
                 },
                 (notVerified) {
                   return BlocProvider.value(
