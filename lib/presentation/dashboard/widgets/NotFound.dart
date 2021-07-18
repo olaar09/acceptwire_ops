@@ -16,6 +16,11 @@ class NotFoundForm extends StatelessWidget {
   Widget build(BuildContext buildContext) {
     ProfileRepository _profileRepo = buildContext.read<ProfileRepository>();
     CreateProfileBloc _bloc = CreateProfileBloc(repository: _profileRepo);
+
+    /// call create
+    ProfileBloc _profileBloc = buildContext.read<ProfileBloc>();
+    _profileBloc.onCreateProfileNav(_bloc);
+
     actionBtn() {
       return Expanded(
         child:

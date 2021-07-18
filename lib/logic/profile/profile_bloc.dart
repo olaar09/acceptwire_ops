@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:acceptwire/logic/auth_bloc/auth_bloc.dart';
 import 'package:acceptwire/logic/auth_bloc/auth_states.dart';
+import 'package:acceptwire/logic/create_profile/create_profile_bloc.dart';
 import 'package:acceptwire/podo/profile_podo.dart';
 import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:bloc/bloc.dart';
@@ -32,6 +33,21 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       );
     });
   }
+
+  onCreateProfileNav(CreateProfileBloc createProfileBloc) {
+    createProfileBloc.stream.listen((CreateProfileState createProfileState) {
+      createProfileState.join(
+        (_) => {},
+        (created) {
+          this.add(ProfileEvent.needVerification());
+        },
+        (_) => {},
+        (_) => {},
+      );
+    });
+  }
+
+  verificationRequired() {}
 
   /// create a new profile after signup
   void fireLoadProfile() {
@@ -83,6 +99,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       yield* autoCreateProfile(needNewProfile.phoneNumber);
     }, (fetchProfile) async* {
       yield* doFetchProfile();
+    }, (needsVerification) async* {
+      yield ProfileState.notVerified();
     });
   }
 }
