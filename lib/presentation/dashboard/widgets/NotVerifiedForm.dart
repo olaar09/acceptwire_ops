@@ -3,9 +3,12 @@ import 'package:acceptwire/logic/verify_identity/verify_identity_bloc.dart';
 import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:acceptwire/utils/helpers/buttons.dart';
 import 'package:acceptwire/utils/helpers/text.dart';
+import 'package:acceptwire/utils/widgets/loading.dart';
+import 'package:acceptwire/utils/widgets/snackbars.dart';
 import 'package:acceptwire/utils/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
 class NotVerifiedForm extends StatelessWidget {
   final _bvnTextController = TextEditingController();
@@ -21,10 +24,35 @@ class NotVerifiedForm extends StatelessWidget {
     ProfileBloc _profileBloc = buildContext.read<ProfileBloc>();
     _profileBloc.onVerifyProfileNav(_bloc);
 
+    actionBtn() {
+      return Row(
+        children: [
+          Expanded(
+            child: primaryButton('Continue', vertical: 14, onPressed: () async {
+              _bloc.verifyIdentity(
+                  firstName: _firstNameTextController.text,
+                  lastName: _lastNameTextController.text,
+                  bvn: _bvnTextController.text);
+            }),
+          ),
+        ],
+      );
+    }
+
     return BlocConsumer<VerifyIdentityBloc, VerifyIdentityState>(
       bloc: _bloc,
       listener: (context, state) {
-        print(state);
+        state.join(
+          (verifying) => null,
+          (verified) => null,
+          (error) {
+            if (GetUtils.isNullOrBlank(error.genericErr) ?? true)
+              print('');
+            else
+              mSnackBar(context: buildContext, message: error.genericErr);
+          },
+          (initial) => null,
+        );
       },
       builder: (context, state) {
         return Padding(
@@ -70,18 +98,11 @@ class NotVerifiedForm extends StatelessWidget {
                       (initial) => '',
                     )),
                 SizedBox(height: 20.0),
-                Row(
-                  children: [
-                    Expanded(
-                      child: primaryButton('Continue', vertical: 14,
-                          onPressed: () async {
-                        _bloc.verifyIdentity(
-                            firstName: _firstNameTextController.text,
-                            lastName: _lastNameTextController.text,
-                            bvn: _bvnTextController.text);
-                      }),
-                    ),
-                  ],
+                state.join(
+                  (verifying) => networkActivityIndicator(),
+                  (verified) => networkActivityIndicator(),
+                  (error) => actionBtn(),
+                  (initial) => actionBtn(),
                 )
               ],
             ),
