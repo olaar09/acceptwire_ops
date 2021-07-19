@@ -24,10 +24,12 @@ Widget regularText(String text,
     {double size: 18,
     Color? color,
     double lineHeight: 2,
+    int maxLines = 5,
     textAlign: TextAlign.left}) {
   return Text(
     text,
     textAlign: textAlign,
+    maxLines: maxLines,
     style: TextStyle(
         fontWeight: FontWeight.normal,
         fontSize: size,

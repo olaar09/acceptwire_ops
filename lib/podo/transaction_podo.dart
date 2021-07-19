@@ -9,6 +9,7 @@ class TransactionPODO extends Equatable {
   late bool receiptSent;
   late bool touched;
   late String bankName;
+  late String customerName;
 
   TransactionPODO();
 
@@ -20,20 +21,23 @@ class TransactionPODO extends Equatable {
     required this.date,
     required this.receiptSent,
     required this.touched,
+    required this.customerName,
   });
 
   factory TransactionPODO.fromJson(Map<dynamic, dynamic> map) {
     return TransactionPODO.setData(
-      amount: double.parse('${map['amount']}'),
-      bankLogo: map.containsKey('bankLogo') ? map['bankLogo'] : '',
-      bankId: map.containsKey('bankId') ? map['bankId'] : '',
-      bankName: map.containsKey('bankName') ? map['bankName'] : '',
-      date: map.containsKey('timestamp')
-          ? getTimeObj('${map['timestamp']}')
-          : DateTime.now(),
-      receiptSent: map.containsKey('receiptSent') ? map['receiptSent'] : false,
-      touched: map.containsKey('touched') ? map['touched'] : false,
-    );
+        amount: double.parse('${map['amount']}'),
+        bankLogo: map.containsKey('bankLogo') ? map['bankLogo'] : '',
+        bankId: map.containsKey('bankId') ? map['bankId'] : '',
+        bankName: map.containsKey('bankName') ? map['bankName'] : '',
+        date: map.containsKey('timestamp')
+            ? getTimeObj('${map['timestamp']}')
+            : DateTime.now(),
+        receiptSent:
+            map.containsKey('receiptSent') ? map['receiptSent'] : false,
+        touched: map.containsKey('touched') ? map['touched'] : false,
+        customerName:
+            map.containsKey('customerName') ? map['customerName'] : '');
   }
 
   List<TransactionPODO> fromJsonArr(List list) {
