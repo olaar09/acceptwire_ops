@@ -4,6 +4,7 @@ import 'package:acceptwire/repository/auth_repository.dart';
 import 'package:acceptwire/utils/helpers/get_value.dart';
 import 'package:acceptwire/utils/helpers/helpers.dart';
 import 'package:acceptwire/utils/helpers/text.dart';
+import 'package:acceptwire/utils/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +24,6 @@ class LatestTransactions extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            header(),
             Expanded(
               child: BlocConsumer<TransactionBloc, TransactionState>(
                 bloc: _bloc,
@@ -31,7 +31,7 @@ class LatestTransactions extends StatelessWidget {
                   print('transactions state changes');
                 },
                 builder: (context, state) {
-                  return buildCustomScrollView();
+                  return buildCustomScrollView(state);
                 },
               ),
             ),
@@ -39,25 +39,42 @@ class LatestTransactions extends StatelessWidget {
         ));
   }
 
-  CustomScrollView buildCustomScrollView() {
-    return CustomScrollView(
-      physics: BouncingScrollPhysics(),
-      slivers: [
-        CupertinoSliverRefreshControl(
-          onRefresh: () async {
-            await Future.delayed(Duration(seconds: 3));
-          },
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-            return buildTransactionItem();
-          }, childCount: 100),
-        ),
-      ],
+  Widget buildCustomScrollView(TransactionState state) {
+    return state.join(
+      (init) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(child: networkActivityIndicator()),
+          regularText('Waiting to receive your transfers'),
+        ],
+      ),
+      (loaded) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          header(),
+          Expanded(
+            child: CustomScrollView(
+              physics: BouncingScrollPhysics(),
+              slivers: [
+                CupertinoSliverRefreshControl(
+                  onRefresh: () async {
+                    await Future.delayed(Duration(seconds: 3));
+                  },
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    return buildTransactionItem(state);
+                  }, childCount: 100),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Container buildTransactionItem() {
+  Widget buildTransactionItem(TransactionState state) {
     return Container(
       child: Column(
         children: [

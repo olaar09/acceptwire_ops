@@ -23,13 +23,15 @@ class TransactionPODO {
 
   factory TransactionPODO.fromJson(Map<dynamic, dynamic> map) {
     return TransactionPODO.setData(
-      amount: map['amount'],
-      bankLogo: map['bankLogo'],
-      bankId: map['bankName'],
-      bankName: map['bankId'],
-      date: getTimeObj('${map['date']}'),
-      receiptSent: map['receiptSent'],
-      touched: map['touched'],
+      amount: double.parse('${map['amount']}'),
+      bankLogo: map.containsKey('bankLogo') ? map['bankLogo'] : '',
+      bankId: map.containsKey('bankId') ? map['bankId'] : '',
+      bankName: map.containsKey('bankName') ? map['bankName'] : '',
+      date: map.containsKey('timestamp')
+          ? getTimeObj('${map['timestamp']}')
+          : DateTime.now(),
+      receiptSent: map.containsKey('receiptSent') ? map['receiptSent'] : false,
+      touched: map.containsKey('touched') ? map['touched'] : false,
     );
   }
 

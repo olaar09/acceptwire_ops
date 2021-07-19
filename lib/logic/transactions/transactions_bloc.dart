@@ -24,16 +24,21 @@ class TransactionBloc extends Cubit<TransactionState> {
 
   Future init() async {
     fireSubscription = firebaseDBRepo
-        .getDataRef(reference: 'transactions/${await _authRepository.getUID()}')
+        .getDataRef(
+            reference: 'latest_transactions/${await _authRepository.getUID()}')
         .onValue
         .listen((event) {
       print(event.snapshot.value);
 
+      // print(list);
       if (GetUtils.isNullOrBlank(event.snapshot.value) ?? true) {
         this.emit(TransactionState.initial());
       } else {
-        List<TransactionPODO> transactions =
-            TransactionPODO().fromJsonArr(event.snapshot.value);
+        Map map = event.snapshot.value;
+        List<TransactionPODO> transactions = [];
+
+        map.forEach(
+            (k, val) => transactions.add(TransactionPODO.fromJson(val)));
         this.emit(TransactionState.loaded(transactions: []));
       }
     });
