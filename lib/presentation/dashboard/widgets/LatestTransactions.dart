@@ -37,14 +37,14 @@ openReceiptModal(BuildContext buildContext) {
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        regularText('Agboola Yusuf', size: 15),
+                        regularText('Agboola Yusuf', size: 16),
                         regularText('Customer name', size: 14),
                       ]),
                   SizedBox(height: 20),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        regularText(formatMoney(20000), size: 15),
+                        regularText(formatMoney(20000), size: 16),
                         regularText('Transaction amount', size: 14),
                       ]),
                   SizedBox(height: 2),
