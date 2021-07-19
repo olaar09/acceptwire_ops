@@ -53,6 +53,10 @@ DateTime getTimeObj(String dateTimeString) {
   return DateTime.parse(dateTimeString);
 }
 
+DateTime getDateObj(String dateTimeString) {
+  return DateTime.parse(dateTimeString);
+}
+
 getTimeOnly(DateTime dateTime) {
   return DateFormat.Hms().format(dateTime);
 }
@@ -65,7 +69,6 @@ bool hasTimeExpired(time) {
   var now = new DateTime.now();
   return getTimeObj(time).isBefore(now);
 }
-
 
 formatMoney(number) {
   final oCcy = new NumberFormat("#,##0.00", "en_US");
