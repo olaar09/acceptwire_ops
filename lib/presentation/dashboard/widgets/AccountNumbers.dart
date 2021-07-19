@@ -28,17 +28,21 @@ class AccountNumbers extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     regularText('Account numbers'),
+                    regularText(
+                        'Transactions reflect in < 1 minute',
+                        size: 12)
                   ],
                 ),
               ),
               Container(
-                height: 110,
+                height: 90,
                 padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
                     ...bankAccounts!
                         .map((bankAccount) => buildAccountItem(
+                            bankLogo: '${bankAccount.bankLogo}',
                             bankName: '${bankAccount.bankName}',
                             accountNumber: '${bankAccount.accountNumber}',
                             reflectionTime: '1'))
@@ -51,7 +55,11 @@ class AccountNumbers extends StatelessWidget {
   }
 
   Container buildAccountItem(
-      {required bankName, required accountNumber, required reflectionTime}) {
+      {required bankName,
+      required bankLogo,
+      required accountNumber,
+      required reflectionTime}) {
+    print(bankLogo);
     return Container(
       margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
       child: DottedBorder(
@@ -65,7 +73,8 @@ class AccountNumbers extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircleAvatar(
-                child: Text('acc'),
+                backgroundImage: NetworkImage('$bankLogo'),
+                backgroundColor: Colors.white,
               ),
               SizedBox(width: 10),
               Column(
@@ -73,13 +82,13 @@ class AccountNumbers extends StatelessWidget {
                 children: [
                   regularText('$bankName', size: 16),
                   boldText('$accountNumber'),
-                  Row(
+                  /* Row(
                     children: [
                       regularText(
                           'Transactions reflect in < $reflectionTime minute',
                           size: 12),
                     ],
-                  )
+                  )*/
                 ],
               )
             ],
