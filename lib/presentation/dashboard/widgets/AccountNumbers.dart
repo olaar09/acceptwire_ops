@@ -28,9 +28,22 @@ class AccountNumbers extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     regularText('Account numbers'),
-                    regularText(
-                        'Transactions reflect in < 1 minute',
-                        size: 12)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          child: Image.asset(
+                            'assets/images/thunder.png',
+                          ),
+                          height: 18,
+                        ),
+                        Expanded(
+                          child: regularText(
+                              'Transactions reflect in < 1 minute.',
+                              size: 12),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
