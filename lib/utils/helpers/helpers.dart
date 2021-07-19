@@ -61,8 +61,8 @@ getTimeOnly(DateTime dateTime) {
   return DateFormat.Hms().format(dateTime);
 }
 
-formatTimeDate(DateTime dateTime) {
-  return DateFormat('yy.MM.dd').format(dateTime); //kk:mm
+formatDateTime(DateTime dateTime) {
+  return DateFormat('yyyy-MM-dd').format(dateTime); //kk:mm
 }
 
 bool hasTimeExpired(time) {

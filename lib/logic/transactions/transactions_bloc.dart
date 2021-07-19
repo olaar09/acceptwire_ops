@@ -15,33 +15,65 @@ part 'transactions_state.dart';
 class TransactionBloc extends Cubit<TransactionState> {
   FirebaseDBRepo firebaseDBRepo = FirebaseDBRepo();
   late AuthRepository _authRepository;
-
   late StreamSubscription fireSubscription;
+
+  static const RECORD_LIMIT = 20; //20;
+
+  // use this to check if data has already been added for the first time
+  bool isDataInitialized = false;
 
   TransactionBloc({required AuthRepository authRepository})
       : _authRepository = authRepository,
         super(TransactionState.initial());
 
-  Future init() async {
-    fireSubscription = firebaseDBRepo
+
+
+  Future fetchInitial() async {
+    firebaseDBRepo
         .getDataRef(
             reference: 'latest_transactions/${await _authRepository.getUID()}')
-        .onValue
-        .listen((event) {
-      print(event.snapshot.value);
-
-      // print(list);
-      if (GetUtils.isNullOrBlank(event.snapshot.value) ?? true) {
+        .limitToLast(RECORD_LIMIT)
+        .once()
+        .then((snapshot) {
+      if (GetUtils.isNullOrBlank(snapshot.value) ?? true) {
         this.emit(TransactionState.initial());
       } else {
-        Map map = event.snapshot.value;
+        Map map = snapshot.value;
         List<TransactionPODO> transactions = [];
 
         map.forEach(
             (k, val) => transactions.add(TransactionPODO.fromJson(val)));
-        this.emit(TransactionState.loaded(transactions: []));
+        this.emit(TransactionState.loaded(
+            transactions: transactions.reversed.toList()));
+        isDataInitialized = true;
       }
     });
+  }
+
+  Future init() async {
+    fireSubscription = firebaseDBRepo
+        .getDataRef(
+            reference: 'latest_transactions/${await _authRepository.getUID()}')
+        .onChildAdded
+        .listen((event) {
+      print(isDataInitialized);
+      if (isDataInitialized) {
+        this.state.join((initial) => null, (loaded) {
+          print('new data');
+          print(event.snapshot.value);
+
+          // get new data
+          Map map = event.snapshot.value;
+          // get current list
+          List<TransactionPODO> currentTransactions = [...loaded.transactions];
+
+          //add new data to beginning of current list
+          currentTransactions.insert(0, TransactionPODO.fromJson(map));
+          this.emit(TransactionState.loaded(transactions: currentTransactions));
+        });
+      }
+    });
+    await fetchInitial();
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:acceptwire/utils/helpers/helpers.dart';
+import 'package:equatable/equatable.dart';
 
-class TransactionPODO {
+class TransactionPODO extends Equatable {
   late double amount;
   late DateTime date;
   late String bankId;
@@ -39,4 +40,8 @@ class TransactionPODO {
     return List<TransactionPODO>.from(
         list.map((x) => TransactionPODO.fromJson(x)));
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [date, amount, bankName, bankLogo];
 }
