@@ -1,3 +1,4 @@
+import 'package:acceptwire/utils/helpers/get_value.dart';
 import 'package:acceptwire/utils/helpers/helpers.dart';
 import 'package:acceptwire/utils/helpers/text.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,12 +33,11 @@ class LatestTransactions extends StatelessWidget {
                   SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       return Container(
-                        color: Colors.white,
                         child: Column(
                           children: [
                             Container(
                               padding: EdgeInsets.all(8.0),
-                              height: 70,
+                              height: 80,
                               child: Row(
                                 children: [
                                   CircleAvatar(
@@ -62,14 +62,50 @@ class LatestTransactions extends StatelessWidget {
                                           ],
                                         ),
                                         Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
                                           children: [
-                                            regularText('10/08/2021', size: 14),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      6.0, 0, 0, 0),
+                                              child: regularText('10/08/2021',
+                                                  size: 14),
+                                            ),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: [
-                                                Icon(Icons.receipt, size: 18),
-                                                Icon(Icons.receipt, size: 18),
+                                                Container(
+                                                  height: 30,
+                                                  child: IconButton(
+                                                      onPressed: () {
+                                                        print('send receipts');
+                                                      },
+                                                      icon: Icon(
+                                                          Icons
+                                                              .receipt_long_sharp,
+                                                          color: Vl.color(
+                                                              color: MColor
+                                                                  .K_SECONDARY_TEXT))),
+                                                ),
+                                                Container(
+                                                  height: 30,
+                                                  child: IconButton(
+                                                      onPressed: () {
+                                                        print(
+                                                            'view transaction');
+                                                      },
+                                                      icon: Icon(
+                                                        Icons
+                                                            .more_horiz_rounded,
+                                                        color: Vl.color(
+                                                            color: MColor
+                                                                .K_SECONDARY_TEXT),
+                                                      )),
+                                                )
                                               ],
                                             )
                                           ],

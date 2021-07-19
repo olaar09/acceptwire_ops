@@ -27,7 +27,7 @@ class AccountBalance extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                regularText('Uncleared balance'),
+                regularText('Main balance'),
                 loading
                     ? Container(
                         margin: const EdgeInsets.fromLTRB(16.0, 10.0, 0, 0),

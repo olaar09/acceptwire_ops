@@ -19,29 +19,24 @@ class AccountNumbers extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               regularText('Account numbers'),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Icon(Icons.arrow_circle_down_rounded, size: 18),
-                  SizedBox(width: 3),
-                  regularText('transactions reflecting in less than 30 seconds',
-                      size: 12),
-                ],
-              ),
             ],
           ),
         ),
         Container(
-          height: 90,
+          height: 110,
           padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
               buildAccountItem(
-                  bankName: 'Access Bank', accountNumber: '0999883838'),
+                  bankName: 'Access Bank',
+                  accountNumber: '0999883838',
+                  reflectionTime: '1'),
               SizedBox(width: 20),
               buildAccountItem(
-                  bankName: 'Wema Bank', accountNumber: '88388383838'),
+                  bankName: 'Wema Bank',
+                  accountNumber: '88388383838',
+                  reflectionTime: '1'),
             ],
           ),
         ),
@@ -49,7 +44,8 @@ class AccountNumbers extends StatelessWidget {
     );
   }
 
-  Container buildAccountItem({required bankName, required accountNumber}) {
+  Container buildAccountItem(
+      {required bankName, required accountNumber, required reflectionTime}) {
     return Container(
       child: DottedBorder(
         color: Colors.grey,
@@ -70,6 +66,13 @@ class AccountNumbers extends StatelessWidget {
                 children: [
                   regularText('$bankName', size: 16),
                   boldText('$accountNumber'),
+                  Row(
+                    children: [
+                      regularText(
+                          'Transactions reflect in < $reflectionTime minute',
+                          size: 12),
+                    ],
+                  )
                 ],
               )
             ],
