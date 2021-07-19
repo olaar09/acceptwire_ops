@@ -1,21 +1,26 @@
+import 'package:acceptwire/logic/reflection_meter/reflection_meter_bloc.dart';
+import 'package:acceptwire/logic/reflection_meter/reflection_meter_bloc.dart';
 import 'package:acceptwire/podo/bank_account_podo.dart';
 import 'package:acceptwire/utils/helpers/text.dart';
 import 'package:acceptwire/utils/widgets/error.dart';
+import 'package:acceptwire/utils/widgets/loading.dart';
+import 'package:acceptwire/utils/widgets/snackbars.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
 class AccountNumbers extends StatelessWidget {
   final List<BankAccountPODO>? bankAccounts;
+  final ReflectionMeterBloc _bloc = ReflectionMeterBloc();
 
-  const AccountNumbers({
+  AccountNumbers({
     this.bankAccounts,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print(bankAccounts);
     return GetUtils.isNullOrBlank(bankAccounts) ?? true
         ? emptyState()
         : Column(
@@ -28,21 +33,33 @@ class AccountNumbers extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     regularText('Account numbers'),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Container(
-                          child: Image.asset(
-                            'assets/images/thunder.png',
-                          ),
-                          height: 18,
-                        ),
-                        Expanded(
-                          child: regularText(
-                              'Transactions reflect in < 1 minute.',
-                              size: 12),
-                        ),
-                      ],
+                    BlocConsumer<ReflectionMeterBloc, ReflectionMeterState>(
+                      bloc: _bloc,
+                      listener: (context, state) {
+                        mSnackBar(
+                            context: context,
+                            message: 'Transaction speed status updated');
+                      },
+                      builder: (context, state) {
+                        return state.join(
+                            (loaded) => Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Icon(
+                                      Icons.downloading_outlined,
+                                      size: 18,
+                                      color: loaded.status == 'ok'
+                                          ? Colors.green[400]
+                                          : Colors.red,
+                                    ),
+                                    SizedBox(width: 4),
+                                    Expanded(
+                                        child: regularText('${loaded.reading}',
+                                            size: 12)),
+                                  ],
+                                ),
+                            () => networkActivityIndicator(radius: 14));
+                      },
                     )
                   ],
                 ),
