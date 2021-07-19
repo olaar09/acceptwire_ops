@@ -61,8 +61,7 @@ class Dashboard extends StatelessWidget {
       appBar: buildAppBar(buildContext),
       body: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
-          print('inside the dashboard');
-          print(state);
+          // print(state);
         },
         builder: (context, profileState) {
           return FocusDetector(
@@ -96,7 +95,7 @@ class Dashboard extends StatelessWidget {
                 (loaded) {
                   return BlocProvider.value(
                     value: _profileBloc,
-                    child: Home(),
+                    child: Home(profilePODO: loaded.profilePODO),
                   );
                 },
                 (initial) {

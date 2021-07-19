@@ -28,7 +28,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         (_) => null,
         (_) => null,
         (signUpSuccess) {
-          print(signUpSuccess.authData.phone);
           fireNeedNewProfileEvent(phoneNumber: signUpSuccess.authData.phone);
         },
       );
@@ -78,7 +77,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     var response =
         await repository.createProfileAfterSignUp(phoneNumber: phoneNumber);
     if (response is ProfilePODO) {
-      print(response.firstName);
       yield ProfileState.notVerified();
     } else {
       yield ProfileState.notFound();
@@ -90,7 +88,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     var response = await repository.getProfile();
     if (response is ProfilePODO) {
-      print('fetched profile');
       if (!response.verified) {
         yield ProfileState.notVerified();
       } else if (!response.activated) {

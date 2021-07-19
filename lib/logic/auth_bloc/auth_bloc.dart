@@ -57,7 +57,6 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
         '${event.authData.password}',
       )
           .timeout(Duration(minutes: 2), onTimeout: () {
-        print('timed out');
         throw Exception('timed out');
       });
       user = userCredential.user;
@@ -71,7 +70,6 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
             message: 'Email or password incorrect');
       }
     } catch (e) {
-      print(e);
       yield AuthenticationState.loginAttemptFailed(
           message: 'An unknown error happened.  check your internet');
     }
