@@ -123,7 +123,10 @@ class LatestTransactions extends StatelessWidget {
               ],
             ),
           ),
-          Divider(thickness: 0, height: 0.8,)
+          Divider(
+            thickness: 0,
+            height: 1.2,
+          )
         ],
       ),
     );

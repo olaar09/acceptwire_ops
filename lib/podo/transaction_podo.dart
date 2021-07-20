@@ -37,7 +37,7 @@ class TransactionPODO extends Equatable {
         markedAppendedTrx:
             map.containsKey('appended') ? map['appended'] : false,
         date: map.containsKey('timestamp')
-            ? getTimeObj('${map['timestamp']}')
+            ? dateTimeFromStamp(map['timestamp'])
             : DateTime.now(),
         receiptSent:
             map.containsKey('receiptSent') ? map['receiptSent'] : false,

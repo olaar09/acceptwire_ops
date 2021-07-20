@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:acceptwire/repository/auth_repository.dart';
 import 'package:acceptwire/repository/firebase_realtime_repository.dart';
+import 'package:acceptwire/utils/helpers/helpers.dart';
 import 'package:bloc/bloc.dart';
 
 import 'package:acceptwire/podo/transaction_podo.dart';
@@ -29,7 +30,7 @@ class TransactionBloc extends Cubit<TransactionState> {
   Future fetchInitial() async {
     firebaseDBRepo
         .getDataRef(
-            reference: 'latest_transactions/${await _authRepository.getUID()}')
+        reference: 'latest_transactions/${await _authRepository.getUID()}')
         .limitToLast(RECORD_LIMIT)
         .once()
         .then((snapshot) {
@@ -40,10 +41,12 @@ class TransactionBloc extends Cubit<TransactionState> {
         List<TransactionPODO> transactions = [];
 
         map.forEach(
-            (k, val) => transactions.add(TransactionPODO.fromJson(val)));
+                (k, val) => transactions.add(TransactionPODO.fromJson(val)));
         this.emit(TransactionState.loaded(
             transactions: transactions.reversed.toList()));
-        isDataInitialized = true;
+        new Future.delayed(const Duration(milliseconds: 10), () {
+          isDataInitialized = true;
+        });
       }
     });
   }
@@ -51,15 +54,13 @@ class TransactionBloc extends Cubit<TransactionState> {
   Future init() async {
     fireSubscription = firebaseDBRepo
         .getDataRef(
-            reference: 'latest_transactions/${await _authRepository.getUID()}')
+        reference: 'latest_transactions/${await _authRepository.getUID()}')
         .onChildAdded
         .listen((event) {
       print(isDataInitialized);
       if (isDataInitialized) {
         this.state.join((initial) => null, (loaded) {
           print('new data');
-          print(event.snapshot.value);
-
           // get new data
           Map map = event.snapshot.value;
           // mark new transaction as appended
@@ -71,6 +72,9 @@ class TransactionBloc extends Cubit<TransactionState> {
           //add new data to beginning of current list
           currentTransactions.insert(0, TransactionPODO.fromJson(map));
           this.emit(TransactionState.loaded(transactions: currentTransactions));
+
+          /// play alert sound
+          playTune();
         });
       }
     });

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 bool blankOrNull(dynamic obj) {
   var checkBlank = GetUtils.isNullOrBlank(obj);
@@ -49,6 +50,10 @@ bool checkFileExists(String path) {
   return FileSystemEntity.typeSync(path) != FileSystemEntityType.notFound;
 }
 
+DateTime dateTimeFromStamp(int timestamp) {
+  return DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+}
+
 DateTime getTimeObj(String dateTimeString) {
   return DateTime.parse(dateTimeString);
 }
@@ -73,4 +78,16 @@ bool hasTimeExpired(time) {
 formatMoney(number) {
   final oCcy = new NumberFormat("#,##0.00", "en_US");
   return '₦${oCcy.format(number)}';
+}
+
+void playTune() {
+  FlutterRingtonePlayer.play(
+    android: AndroidSounds.notification,
+    ios: IosSounds.glass,
+    looping: true,
+    // Android only - API >= 28
+    volume: 0.1,
+    // Android only - API >= 28
+    asAlarm: false, // Android only - all APIs
+  );
 }
