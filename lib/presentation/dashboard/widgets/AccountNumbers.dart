@@ -89,7 +89,6 @@ class AccountNumbers extends StatelessWidget {
       required bankLogo,
       required accountNumber,
       required reflectionTime}) {
-    print(bankLogo);
     return Container(
       margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
       child: DottedBorder(

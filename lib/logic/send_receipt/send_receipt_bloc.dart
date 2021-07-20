@@ -20,6 +20,7 @@ class SendReceiptBloc extends Cubit<SendReceiptState> {
   doSendReceipt({
     required String customerPhone,
     required String purchaseDescription,
+    required String transactionId,
   }) async {
     this.emit(SendReceiptState.loading());
 
@@ -40,13 +41,15 @@ class SendReceiptBloc extends Cubit<SendReceiptState> {
     }
 
     var response = await _receiptRepo.sendReceipt(
+      transactionId: transactionId,
       customerPhone: customerPhone,
       purchaseDescription: purchaseDescription,
     );
 
     if (response is bool) {
-      this.emit(SendReceiptState.loaded());
+      this.emit(SendReceiptState.loaded(transactionId: transactionId));
     } else {
+      print(response);
       this.emit(SendReceiptState.networkErr(message: response));
     }
   }

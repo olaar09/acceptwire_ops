@@ -2,21 +2,21 @@ import 'package:acceptwire/logic/transactions/transactions_bloc.dart';
 import 'package:acceptwire/podo/transaction_podo.dart';
 import 'package:acceptwire/presentation/dashboard/widgets/SendReceipt.dart';
 import 'package:acceptwire/presentation/dashboard/widgets/ViewTransaction.dart';
-import 'package:acceptwire/repository/auth_repository.dart';
 import 'package:acceptwire/utils/helpers/get_value.dart';
 import 'package:acceptwire/utils/helpers/helpers.dart';
 import 'package:acceptwire/utils/helpers/text.dart';
 import 'package:acceptwire/utils/widgets/loading.dart';
-import 'package:acceptwire/utils/widgets/text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-openReceiptModal(BuildContext buildContext, TransactionPODO transaction) {
+openReceiptModal(
+    BuildContext buildContext, TransactionPODO transaction, receiptSentTemp) {
   showCupertinoModalBottomSheet(
       context: buildContext,
       builder: (context) => SendReceipt(
+            receiptSentTemp: receiptSentTemp,
             transactionPODO: transaction,
           ),
       barrierColor: Colors.grey[100]);
@@ -33,6 +33,7 @@ openViewTrxModal(BuildContext buildContext, TransactionPODO transaction) {
 
 class LatestTransactions extends StatelessWidget {
   late final TransactionBloc _bloc;
+  final List<String> receiptSentTemp = [];
 
   @override
   Widget build(BuildContext buildContext) {
@@ -101,6 +102,9 @@ class LatestTransactions extends StatelessWidget {
       child: Column(
         children: [
           Container(
+            color: transaction.markedAppendedTrx
+                ? Colors.orange[100]
+                : Colors.transparent,
             padding: EdgeInsets.all(8.0),
             height: 80,
             child: Row(
@@ -119,7 +123,7 @@ class LatestTransactions extends StatelessWidget {
               ],
             ),
           ),
-          Divider()
+          Divider(thickness: 0, height: 0.8,)
         ],
       ),
     );
@@ -141,7 +145,7 @@ class LatestTransactions extends StatelessWidget {
               height: 30,
               child: IconButton(
                   onPressed: () {
-                    openReceiptModal(context, transaction);
+                    openReceiptModal(context, transaction, receiptSentTemp);
                     print('send receipts');
                   },
                   icon: Icon(Icons.receipt_long_sharp,

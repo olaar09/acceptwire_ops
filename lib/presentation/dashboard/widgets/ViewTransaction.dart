@@ -26,7 +26,7 @@ class ViewTransaction extends StatelessWidget {
               children: [
                 boldText('Transaction details'),
                 IconButton(
-                  icon: Icon(Icons.cancel),
+                  icon: Icon(Icons.close),
                   onPressed: () {
                     navToBack(context: context, data: null);
                   },

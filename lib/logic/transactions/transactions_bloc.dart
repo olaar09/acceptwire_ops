@@ -26,8 +26,6 @@ class TransactionBloc extends Cubit<TransactionState> {
       : _authRepository = authRepository,
         super(TransactionState.initial());
 
-
-
   Future fetchInitial() async {
     firebaseDBRepo
         .getDataRef(
@@ -64,6 +62,9 @@ class TransactionBloc extends Cubit<TransactionState> {
 
           // get new data
           Map map = event.snapshot.value;
+          // mark new transaction as appended
+          map.putIfAbsent('appended', () => true);
+
           // get current list
           List<TransactionPODO> currentTransactions = [...loaded.transactions];
 

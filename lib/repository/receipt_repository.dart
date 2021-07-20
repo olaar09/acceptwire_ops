@@ -1,5 +1,4 @@
 import 'package:acceptwire/exceptions/RequestResponseException.dart';
-import 'package:acceptwire/podo/lecture_podo.dart';
 import 'package:acceptwire/utils/helpers/rest_client.dart';
 import 'package:dio/dio.dart';
 
@@ -9,13 +8,15 @@ class ReceiptRepo {
   ReceiptRepo({required this.restClient});
 
   sendReceipt(
-      {required String customerPhone,
+      {required String transactionId,
+      required String customerPhone,
       required String purchaseDescription}) async {
     /// try to send receipt
     try {
-      final response = await this.restClient.post('/receipt', data: {
+      final response = await this.restClient.post('/merchant/receipt', data: {
         'customerPhone': customerPhone,
         'purchaseDescription': purchaseDescription,
+        'transactionId': transactionId
       });
       RequestResponse requestResponse = response.data;
       if (requestResponse.statusCode == RequestResponse.STATUS_OK) {

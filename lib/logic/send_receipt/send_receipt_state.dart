@@ -20,8 +20,8 @@ class SendReceiptState extends Union5Impl<_Initial, _Loading, _Loaded,
   factory SendReceiptState.loading() =>
       SendReceiptState._(_factory.second(_Loading()));
 
-  factory SendReceiptState.loaded() =>
-      SendReceiptState._(_factory.third(_Loaded()));
+  factory SendReceiptState.loaded({required transactionId}) =>
+      SendReceiptState._(_factory.third(_Loaded(transactionId: transactionId)));
 
   factory SendReceiptState.validationErr({phoneErr, purchaseItemErr}) =>
       SendReceiptState._(_factory.fourth(_ValidationErr(
@@ -65,6 +65,10 @@ class _NetworkErr extends Equatable {
 }
 
 class _Loaded extends Equatable {
+  final String transactionId;
+
+  _Loaded({required this.transactionId});
+
   @override
   // TODO: implement props
   List<Object?> get props => [];
