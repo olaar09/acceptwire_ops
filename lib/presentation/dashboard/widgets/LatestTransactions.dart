@@ -1,5 +1,7 @@
 import 'package:acceptwire/logic/transactions/transactions_bloc.dart';
 import 'package:acceptwire/podo/transaction_podo.dart';
+import 'package:acceptwire/presentation/dashboard/widgets/SendReceipt.dart';
+import 'package:acceptwire/presentation/dashboard/widgets/ViewTransaction.dart';
 import 'package:acceptwire/repository/auth_repository.dart';
 import 'package:acceptwire/utils/helpers/get_value.dart';
 import 'package:acceptwire/utils/helpers/helpers.dart';
@@ -11,104 +13,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-openReceiptModal(BuildContext buildContext) {
+openReceiptModal(BuildContext buildContext, TransactionPODO transaction) {
   showCupertinoModalBottomSheet(
       context: buildContext,
-      builder: (context) => Material(
-            child: Container(
-              height: 480,
-              padding: EdgeInsets.fromLTRB(10, 18, 10, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      boldText('Send receipt'),
-                      IconButton(
-                        icon: Icon(Icons.send),
-                        onPressed: () {
-                          print('');
-                        },
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        regularText('Agboola Yusuf', size: 16),
-                        regularText('Customer name', size: 14),
-                      ]),
-                  SizedBox(height: 20),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        regularText(formatMoney(20000), size: 16),
-                        regularText('Transaction amount', size: 14),
-                      ]),
-                  SizedBox(height: 2),
-                  mTextField('Customer phone number'),
-                  mTextField('What did you sell? ')
-                ],
-              ),
-            ),
+      builder: (context) => SendReceipt(
+            transactionPODO: transaction,
           ),
       barrierColor: Colors.grey[100]);
 }
 
-openViewTrxModal(BuildContext buildContext) {
+openViewTrxModal(BuildContext buildContext, TransactionPODO transaction) {
   showCupertinoModalBottomSheet(
       context: buildContext,
-      builder: (context) => Material(
-            child: Container(
-              height: 420,
-              padding: EdgeInsets.fromLTRB(10, 18, 10, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      boldText('Transaction details'),
-                      IconButton(
-                        icon: Icon(Icons.cancel),
-                        onPressed: () {
-                          print('');
-                        },
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(children: [
-                    CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            'https://awire-assets.s3.eu-central-1.amazonaws.com/access_Bank_Logo.png')),
-                  ]),
-                  SizedBox(height: 30),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        boldText(formatMoney(20000)),
-                        regularText('Transaction amount', size: 14),
-                      ]),
-                  SizedBox(height: 30),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        boldText('Agboola Yusuf'),
-                        regularText('Customer name', size: 14),
-                      ]),
-                  SizedBox(height: 30),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        boldText('2020-06-20'),
-                        regularText('Transaction date', size: 14),
-                      ]),
-                ],
-              ),
-            ),
+      builder: (context) => ViewTransaction(
+            transactionPODO: transaction,
           ),
       barrierColor: Colors.grey[100]);
 }
@@ -223,7 +141,7 @@ class LatestTransactions extends StatelessWidget {
               height: 30,
               child: IconButton(
                   onPressed: () {
-                    openReceiptModal(context);
+                    openReceiptModal(context, transaction);
                     print('send receipts');
                   },
                   icon: Icon(Icons.receipt_long_sharp,
@@ -233,7 +151,7 @@ class LatestTransactions extends StatelessWidget {
               height: 30,
               child: IconButton(
                   onPressed: () {
-                    openViewTrxModal(context);
+                    openViewTrxModal(context, transaction);
                   },
                   icon: Icon(
                     Icons.more_horiz_rounded,
