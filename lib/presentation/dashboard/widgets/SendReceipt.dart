@@ -59,7 +59,11 @@ class _SendReceiptState extends State<SendReceipt> {
               (loaded) => Center(
                   child: Column(
                 children: [
-                  Icon(Icons.check_circle_rounded, size: 40),
+                  Icon(
+                    Icons.check_circle_rounded,
+                    size: 40,
+                    color: Colors.green[300],
+                  ),
                   SizedBox(height: 10),
                   regularText(
                       'Receipt sent to ${widget.transactionPODO.customerName}'),
