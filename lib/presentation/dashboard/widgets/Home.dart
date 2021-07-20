@@ -22,15 +22,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late final TransactionBloc _trxBloc;
+  late  TransactionBloc _trxBloc;
 
   @override
   Widget build(BuildContext buildContext) {
     ProfileRepository _profileRepo = buildContext.read<ProfileRepository>();
     AuthRepository _authRepo = buildContext.read<AuthRepository>();
-    if (GetUtils.isNullOrBlank(_trxBloc) ?? true) {
-      _trxBloc = TransactionBloc(authRepository: _authRepo);
-    }
+    //  if (GetUtils.isNullOrBlank(_trxBloc) ?? true) {
+    _trxBloc = TransactionBloc(authRepository: _authRepo);
+    // }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,

@@ -21,9 +21,10 @@ class MetaDataState extends Union3Impl<_MetaDataLoadingState,
   factory MetaDataState.loading() =>
       MetaDataState._(_factory.first(_MetaDataLoadingState()));
 
-  factory MetaDataState.loaded({required AppConfig appConfig}) =>
-      MetaDataState._(
-          _factory.second(_MetaDataLoadedState(appConfig: appConfig)));
+  factory MetaDataState.loaded(
+          {required AppConfig appConfig, required nextScreen}) =>
+      MetaDataState._(_factory.second(
+          _MetaDataLoadedState(appConfig: appConfig, nextScreen: nextScreen)));
 
   factory MetaDataState.error({required String message}) =>
       MetaDataState._(_factory.third(_MetaDataErrorState(message: message)));
@@ -36,8 +37,9 @@ class _MetaDataLoadingState extends Equatable {
 
 class _MetaDataLoadedState extends Equatable {
   final AppConfig appConfig;
+  final String nextScreen;
 
-  _MetaDataLoadedState({required this.appConfig});
+  _MetaDataLoadedState({required this.appConfig, required this.nextScreen});
 
   @override
   List<Object?> get props => [appConfig];

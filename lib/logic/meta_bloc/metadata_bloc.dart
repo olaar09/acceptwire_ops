@@ -11,12 +11,13 @@ class MetaDataBloc extends Cubit<MetaDataState> {
   MetaDataBloc({required this.metaDataRepo, required this.authRepository})
       : super(MetaDataState.loading());
 
-  void fireLoadingEvent() async {
+  void fireLoadingEvent({required String nextScreen}) async {
     this.emit(MetaDataState.loading());
     var metaResponse = await metaDataRepo.fetchMetaData();
     if (metaResponse is AppConfig) {
       // sae config in local storage.
-      this.emit(MetaDataState.loaded(appConfig: metaResponse));
+      this.emit(MetaDataState.loaded(
+          appConfig: metaResponse, nextScreen: nextScreen));
     } else {
       this.emit(MetaDataState.error(message: '$metaResponse'));
     }

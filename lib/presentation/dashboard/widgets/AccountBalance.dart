@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:get/get.dart';
 
 class AccountBalance extends StatelessWidget {
   late final FetchBalanceBloc _bloc;
@@ -53,10 +54,13 @@ class AccountBalance extends StatelessWidget {
       bloc: _bloc,
       listener: (context, state) {
         state.join(
-          (_) => null,
+          (initial) {
+            if (GetUtils.isNullOrBlank(initial.error) ?? true) return;
+            mSnackBar(context: buildContext, message: '${initial.error}');
+          },
           (_) => null,
           (loaded) =>
-              {mSnackBar(context: buildContext, message: 'Balance updated')},
+              mSnackBar(context: buildContext, message: 'Balance updated'),
         );
       },
       builder: (context, state) {

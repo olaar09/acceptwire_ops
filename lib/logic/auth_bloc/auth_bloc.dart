@@ -14,7 +14,13 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 
   AuthBloc({required AuthRepository authRepository})
       : _authRepository = authRepository,
-        super(AuthenticationState.userUnAuthenticated());
+        super(AuthenticationState.userUnAuthenticated()) {
+    _authRepository.getAuthInstance().authStateChanges().listen((user) {
+      if (user == null) {
+        fireLoggedOutEvent();
+      }
+    });
+  }
 
   @override
   Stream<AuthenticationState> mapEventToState(

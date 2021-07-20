@@ -40,19 +40,6 @@ class SplashScreen extends StatelessWidget {
       );
     }
 
-    void navigateToDashboard() {
-      _metaBloc.state.join(
-          (loading) => null,
-          (loaded) => {navOfAllPage(context: context, route: '/dashboard')},
-          (error) => null);
-    }
-
-    void navigateToOnboard() {
-      _metaBloc.state.join((loading) => null, (loaded) {
-        navOfAllPage(context: context, route: '/onboard');
-      }, (error) => null);
-    }
-
     return Scaffold(
       backgroundColor: Vl.color(color: MColor.K_LIGHT_PLAIN),
       body: FocusDetector(
@@ -62,21 +49,34 @@ class SplashScreen extends StatelessWidget {
             BlocListener<AuthBloc, AuthenticationState>(
                 listener: (context, authState) {
               authState.join(
-                  (loading) => null,
-                  (validationFailed) => null,
-                  (loginAttemptFailed) => null,
-                  (signUpAttemptFailed) => null, (unAuthenticated) {
-                navigateToOnboard();
-              }, (authenticated) {
-                navigateToDashboard();
-              }, (_) => null);
+                (loading) => null,
+                (validationFailed) => null,
+                (loginAttemptFailed) => null,
+                (signUpAttemptFailed) => null,
+                (unAuthenticated) {
+                  _metaBloc.fireLoadingEvent(nextScreen: '/onboard');
+                  //  navigateToOnBoard();
+                },
+                (authenticated) {
+                  _metaBloc.fireLoadingEvent(nextScreen: '/dashboard');
+                  //  navigateToDashboard();
+                },
+                (_) => null,
+              );
             }),
+            BlocListener<MetaDataBloc, MetaDataState>(
+                listener: (context, metaState) async {
+              metaState.join(
+                (loading) => print('loading..'),
+                (loaded) => navOfAllPage(
+                    context: context, route: '${loaded.nextScreen}'),
+                (error) => navOfAllPage(context: context, route: '/onboard'),
+              );
+            })
           ],
           child: BlocBuilder<MetaDataBloc, MetaDataState>(
             builder: (context, buildState) {
-              return FocusDetector(
-                  onFocusGained: () => _metaBloc.fireLoadingEvent(),
-                  child: displayContent(buildState));
+              return displayContent(buildState);
             },
           ),
         ),

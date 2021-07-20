@@ -10,6 +10,7 @@ import 'package:acceptwire/presentation/onboarding.dart';
 import 'package:acceptwire/presentation/profile.dart';
 import 'package:acceptwire/presentation/splash.dart';
 import 'package:acceptwire/repository/profile_repository.dart';
+import 'package:acceptwire/utils/helpers/navigation.dart';
 import 'package:acceptwire/utils/helpers/rest_client.dart';
 import 'package:acceptwire/utils/helpers/theme.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -62,7 +63,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext buildContext) {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(create: (context) => _authRepository),
@@ -81,11 +82,24 @@ class _MyAppState extends State<MyApp> {
                   authRepository: _authRepository)),
           BlocProvider(create: (context) => _profileBloc),
         ],
-        child: MaterialApp(
-          title: 'acceptwire',
-          theme: appThemes[ThemeChoice.Light],
-          home: SplashScreen(),
-          onGenerateRoute: generateRoute,
+        child: BlocListener<AuthBloc, AuthenticationState>(
+          listener: (context, state) {
+            state.join(
+              (_) => null,
+              (_) => null,
+              (_) => null,
+              (_) => null,
+              (_) => null,
+              (_) => null,
+              (_) => navOfAllPage(context: buildContext, route: '/onboard'),
+            );
+          },
+          child: MaterialApp(
+            title: 'acceptwire',
+            theme: appThemes[ThemeChoice.Light],
+            home: SplashScreen(),
+            onGenerateRoute: generateRoute,
+          ),
         ),
       ),
     );
@@ -99,6 +113,7 @@ class _MyAppState extends State<MyApp> {
         return MaterialPageRoute(
             builder: (_) => LoginPage(), fullscreenDialog: true);
       case '/onboard':
+        print('onboard');
         return MaterialPageRoute(builder: (_) => OnBoarding());
       case '/profile':
         return MaterialPageRoute(builder: (_) => ProfilePage());

@@ -10,8 +10,8 @@ class FetchBalanceState extends Union3Impl<_Initial, _Loading, _Loaded> {
   FetchBalanceState._(Union3<_Initial, _Loading, _Loaded> union) : super(union);
 
   // PUBLIC factories which hide the complexity from outside classes
-  factory FetchBalanceState.initial() =>
-      FetchBalanceState._(_factory.first(_Initial()));
+  factory FetchBalanceState.initial({String? error}) =>
+      FetchBalanceState._(_factory.first(_Initial(error: error)));
 
   factory FetchBalanceState.loading() =>
       FetchBalanceState._(_factory.second(_Loading()));
@@ -21,9 +21,13 @@ class FetchBalanceState extends Union3Impl<_Initial, _Loading, _Loaded> {
 }
 
 class _Initial extends Equatable {
+  final String? error;
+
+  _Initial({this.error});
+
   @override
   // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [error];
 }
 
 class _Loading extends Equatable {

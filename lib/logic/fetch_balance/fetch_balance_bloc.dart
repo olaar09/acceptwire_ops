@@ -33,7 +33,9 @@ class FetchBalanceBloc extends Cubit<FetchBalanceState> {
     if (response is ProfilePODO) {
       this.emit(FetchBalanceState.loaded(profilePODO: response));
     } else if (response is RequestResponse) {
-      this.emit(FetchBalanceState.initial());
+      this.emit(FetchBalanceState.initial(error: response.reason));
+    } else {
+      this.emit(FetchBalanceState.initial(error: 'An unknown error occurred'));
     }
   }
 }

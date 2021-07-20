@@ -117,10 +117,15 @@ class ApiInterceptors extends Interceptor {
       // call  bugsnag.
     }
 
-    dioError.error = RequestResponse._(
-        status: 'failed',
-        statusCode: dioError.response!.statusCode,
-        reason: 'Error: $errorString');
+    if (gt.GetUtils.isNullOrBlank(dioError.response) ?? true) {
+      dioError.error = RequestResponse._(
+          status: 'failed', statusCode: 0, reason: 'Error: $errorString');
+    } else {
+      dioError.error = RequestResponse._(
+          status: 'failed',
+          statusCode: dioError.response!.statusCode,
+          reason: 'Error: $errorString');
+    }
 
     return super.onError(dioError, handler);
   }
