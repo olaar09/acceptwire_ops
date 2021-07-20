@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:acceptwire/logic/transactions/transactions_bloc.dart';
 import 'package:acceptwire/podo/profile_podo.dart';
 import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:acceptwire/utils/helpers/rest_client.dart';
@@ -12,9 +13,18 @@ part 'fetch_balance_state.dart';
 class FetchBalanceBloc extends Cubit<FetchBalanceState> {
   late ProfileRepository _repository;
 
-  FetchBalanceBloc({required ProfileRepository repository})
+  FetchBalanceBloc(
+      {required ProfileRepository repository,
+      required TransactionBloc transactionBloc})
       : _repository = repository,
-        super(FetchBalanceState.initial());
+        super(FetchBalanceState.initial()) {
+    transactionBloc.stream.listen((event) {
+      event.join(
+        (_) => null,
+        (transactionLoaded) async => await fetchBalance(),
+      );
+    });
+  }
 
   Future fetchBalance() async {
     this.emit(FetchBalanceState.loading());

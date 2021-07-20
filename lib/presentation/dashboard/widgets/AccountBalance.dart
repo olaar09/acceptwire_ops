@@ -1,5 +1,4 @@
 import 'package:acceptwire/logic/fetch_balance/fetch_balance_bloc.dart';
-import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:acceptwire/utils/helpers/helpers.dart';
 import 'package:acceptwire/utils/helpers/text.dart';
 import 'package:acceptwire/utils/widgets/loading.dart';
@@ -14,8 +13,7 @@ class AccountBalance extends StatelessWidget {
 
   @override
   Widget build(BuildContext buildContext) {
-    ProfileRepository _profileRepo = buildContext.read<ProfileRepository>();
-    _bloc = FetchBalanceBloc(repository: _profileRepo);
+    _bloc = buildContext.read<FetchBalanceBloc>();
 
     displayBalance(double balance, bool loading) {
       return FocusDetector(

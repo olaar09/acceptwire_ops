@@ -118,8 +118,7 @@ class LatestTransactions extends StatelessWidget {
 
   @override
   Widget build(BuildContext buildContext) {
-    AuthRepository _authRepo = buildContext.read<AuthRepository>();
-    _bloc = TransactionBloc(authRepository: _authRepo);
+    _bloc = buildContext.read<TransactionBloc>();
     _bloc.init();
 
     return Expanded(
