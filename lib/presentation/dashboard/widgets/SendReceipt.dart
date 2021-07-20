@@ -53,59 +53,75 @@ class _SendReceiptState extends State<SendReceipt> {
             );
           },
           builder: (context, state) {
-            return ListView(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    boldText('Send receipt'),
-                    state.join(
-                      (_) => buildSendButton(),
-                      (_) => networkActivityIndicator(),
-                      (_) => emptyState(),
-                      (_) => buildSendButton(),
-                      (_) => buildSendButton(),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  regularText('${widget.transactionPODO.customerName}',
-                      size: 16),
-                  regularText('Customer name', size: 14),
-                ]),
-                SizedBox(height: 20),
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  regularText(formatMoney(widget.transactionPODO.amount),
-                      size: 16),
-                  regularText('Transaction amount', size: 14),
-                ]),
-                SizedBox(height: 2),
-                mTextField('Customer phone number',
-                    onChanged: (text) {},
-                    controller: _phoneTextController,
-                    error: state.join(
-                      (_) => '',
-                      (_) => '',
-                      (_) => '',
-                      (validationErr) => '${validationErr.phoneErr}',
-                      (_) => '',
-                    )),
-                mTextField('What did you sell? ',
-                    onChanged: (text) {},
-                    controller: _itemTextController,
-                    error: state.join(
-                      (_) => '',
-                      (_) => '',
-                      (_) => '',
-                      (validationErr) => '${validationErr.purchaseItemErr}',
-                      (_) => '',
-                    ))
-              ],
+            return state.join(
+              (_) => buildForm(state),
+              (_) => buildForm(state),
+              (loaded) => Center(
+                  child: Column(
+                children: [
+                  Icon(Icons.check_circle_rounded, size: 40),
+                  SizedBox(height: 10),
+                  regularText(
+                      'Receipt sent to ${widget.transactionPODO.customerName}'),
+                ],
+              )),
+              (_) => buildForm(state),
+              (networkErr) => buildForm(state),
             );
           },
         ),
       ),
+    );
+  }
+
+  ListView buildForm(SendReceiptState state) {
+    return ListView(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            boldText('Send receipt'),
+            state.join(
+              (_) => buildSendButton(),
+              (_) => networkActivityIndicator(),
+              (_) => emptyState(),
+              (_) => buildSendButton(),
+              (_) => buildSendButton(),
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          regularText('${widget.transactionPODO.customerName}', size: 16),
+          regularText('Customer name', size: 14),
+        ]),
+        SizedBox(height: 20),
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          regularText(formatMoney(widget.transactionPODO.amount), size: 16),
+          regularText('Transaction amount', size: 14),
+        ]),
+        SizedBox(height: 2),
+        mTextField('Customer phone number',
+            onChanged: (text) {},
+            controller: _phoneTextController,
+            error: state.join(
+              (_) => '',
+              (_) => '',
+              (_) => '',
+              (validationErr) => '${validationErr.phoneErr}',
+              (_) => '',
+            )),
+        mTextField('What did you sell? ',
+            onChanged: (text) {},
+            controller: _itemTextController,
+            error: state.join(
+              (_) => '',
+              (_) => '',
+              (_) => '',
+              (validationErr) => '${validationErr.purchaseItemErr}',
+              (_) => '',
+            ))
+      ],
     );
   }
 
