@@ -51,7 +51,7 @@ bool checkFileExists(String path) {
 }
 
 DateTime dateTimeFromStamp(int timestamp) {
-  return DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+  return DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
 }
 
 DateTime getTimeObj(String dateTimeString) {

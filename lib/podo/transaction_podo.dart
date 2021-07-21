@@ -28,12 +28,15 @@ class TransactionPODO extends Equatable {
       required this.markedAppendedTrx});
 
   factory TransactionPODO.fromJson(Map<dynamic, dynamic> map) {
+    //print(map['timestamp']);
+
     return TransactionPODO.setData(
         amount: double.parse('${map['amount']}'),
         bankLogo: map.containsKey('bankLogo') ? map['bankLogo'] : '',
         bankId: map.containsKey('bankId') ? map['bankId'] : '',
         bankName: map.containsKey('bankName') ? map['bankName'] : '',
-        transactionId: map.containsKey('transactionId') ? map['transactionId'] : '',
+        transactionId:
+            map.containsKey('transactionId') ? map['transactionId'] : '',
         markedAppendedTrx:
             map.containsKey('appended') ? map['appended'] : false,
         date: map.containsKey('timestamp')

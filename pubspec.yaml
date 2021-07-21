@@ -80,6 +80,7 @@ flutter:
     - assets/images/bill.png
     - assets/images/verifying.png
     - assets/images/hi.png
+    - assets/images/bank.png
 
 
 # Flutter launcher icon

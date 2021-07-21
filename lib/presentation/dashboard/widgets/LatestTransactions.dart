@@ -137,35 +137,40 @@ class LatestTransactions extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(6.0, 0, 0, 0),
-          child: regularText('${formatDateTime(transaction.date)}', size: 14),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(6.0, 0, 0, 0),
+            child: regularText('${formatDateTime(transaction.date)}', size: 14),
+          ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              height: 30,
-              child: IconButton(
-                  onPressed: () {
-                    openReceiptModal(context, transaction, receiptSentTemp);
-                    print('send receipts');
-                  },
-                  icon: Icon(Icons.receipt_long_sharp,
-                      color: Vl.color(color: MColor.K_SECONDARY_TEXT))),
-            ),
-            Container(
-              height: 30,
-              child: IconButton(
-                  onPressed: () {
-                    openViewTrxModal(context, transaction);
-                  },
-                  icon: Icon(
-                    Icons.more_horiz_rounded,
-                    color: Vl.color(color: MColor.K_SECONDARY_TEXT),
-                  )),
-            )
-          ],
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                height: 30,
+                child: IconButton(
+                    onPressed: () {
+                      openReceiptModal(context, transaction, receiptSentTemp);
+                      print('send receipts');
+                    },
+                    icon: Icon(Icons.receipt_long_sharp,
+                        color: Vl.color(color: MColor.K_SECONDARY_TEXT))),
+              ),
+              Container(
+                height: 30,
+                width: 30,
+                child: IconButton(
+                    onPressed: () {
+                      openViewTrxModal(context, transaction);
+                    },
+                    icon: Icon(
+                      Icons.more_horiz_rounded,
+                      color: Vl.color(color: MColor.K_SECONDARY_TEXT),
+                    )),
+              )
+            ],
+          ),
         )
       ],
     );
@@ -183,9 +188,11 @@ class LatestTransactions extends StatelessWidget {
   }
 
   CircleAvatar buildCircleAvatar(String image) {
+    String dummyImage =
+        'https://awire-assets.s3.eu-central-1.amazonaws.com/bank.png';
     return CircleAvatar(
       backgroundColor: Colors.white,
-      backgroundImage: NetworkImage('$image'),
+      backgroundImage: NetworkImage('${image.length < 1 ? dummyImage : image}'),
       radius: 16,
     );
   }
