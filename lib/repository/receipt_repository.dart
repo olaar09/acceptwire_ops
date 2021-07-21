@@ -22,7 +22,6 @@ class ReceiptRepo {
       if (requestResponse.statusCode == RequestResponse.STATUS_OK) {
         return true;
       }
-      print(requestResponse.data);
       throw Exception('Request could not complete');
     } on DioError catch (e) {
       return e.error.reason;

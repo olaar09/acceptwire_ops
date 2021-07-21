@@ -85,7 +85,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Stream<ProfileState> doFetchProfile() async* {
     yield ProfileState.loading(hasError: false);
-
     var response = await repository.getProfile();
     if (response is ProfilePODO) {
       if (!response.verified) {

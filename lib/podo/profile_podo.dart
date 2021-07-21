@@ -26,17 +26,18 @@ class ProfilePODO {
   factory ProfilePODO.fromJson(Map<dynamic, dynamic> map) {
     //print(map);
     return ProfilePODO.setData(
-        phone: map['Phone'],
-        emailAddress: map['Email'],
-        firstName: map['FirstName'],
-        lastName: map['LastName'],
-        bvn: map['BVN'],
-        bankAccounts: map.containsKey('Accounts')
-            ? BankAccountPODO().fromJsonArr(map['Accounts'])
-            : [],
-        mainBalance: double.parse(
-            '${map.containsKey('MainBalance') ? map['MainBalance'] : '0'}'),
-        verified: map['Verified'],
-        activated: map['Activated']);
+      phone: map['Phone'],
+      emailAddress: map['Email'],
+      firstName: map['FirstName'],
+      lastName: map['LastName'],
+      bvn: map['BVN'],
+      bankAccounts: map.containsKey('Accounts')
+          ? BankAccountPODO().fromJsonArr(map['Accounts'])
+          : [],
+      mainBalance: double.parse(
+          '${map.containsKey('MainBalance') ? map['MainBalance'] : '0'}'),
+      verified: map.containsKey('Verified') ? map['Verified'] : false,
+      activated: map.containsKey('Activated') ? map['Activated'] : false,
+    );
   }
 }

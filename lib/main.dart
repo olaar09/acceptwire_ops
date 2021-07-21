@@ -91,7 +91,7 @@ class _MyAppState extends State<MyApp> {
               (_) => null,
               (_) => null,
               (_) => null,
-              (_) => navOfAllPage(context: buildContext, route: '/onboard'),
+              (_) => print('no auth')
             );
           },
           child: MaterialApp(
