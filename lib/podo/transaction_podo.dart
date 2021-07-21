@@ -33,7 +33,7 @@ class TransactionPODO extends Equatable {
         bankLogo: map.containsKey('bankLogo') ? map['bankLogo'] : '',
         bankId: map.containsKey('bankId') ? map['bankId'] : '',
         bankName: map.containsKey('bankName') ? map['bankName'] : '',
-        transactionId: map.containsKey('transactionId') ? map['bankName'] : '',
+        transactionId: map.containsKey('transactionId') ? map['transactionId'] : '',
         markedAppendedTrx:
             map.containsKey('appended') ? map['appended'] : false,
         date: map.containsKey('timestamp')

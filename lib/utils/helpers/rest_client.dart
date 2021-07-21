@@ -88,6 +88,9 @@ class ApiInterceptors extends Interceptor {
     options.headers['Authorization'] = '${await authRepo.getToken()}';
 
     // print('${await authRepo.getToken()}');
+    print(options.data);
+    print(options.uri);
+    print(options.method);
     // do something before request is sent
     return super.onRequest(options, handler);
   }

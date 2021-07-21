@@ -15,14 +15,15 @@ class ReceiptRepo {
     try {
       final response = await this.restClient.post('/merchant/receipt', data: {
         'customerPhone': customerPhone,
-        'purchaseDescription': purchaseDescription,
+        'purchaseItem': purchaseDescription,
         'transactionId': transactionId
       });
       RequestResponse requestResponse = response.data;
       if (requestResponse.statusCode == RequestResponse.STATUS_OK) {
         return true;
       }
-      throw RequestResponseException(cause: 'Request could not complete');
+      print(requestResponse.data);
+      throw Exception('Request could not complete');
     } on DioError catch (e) {
       return e.error.reason;
     } catch (e) {

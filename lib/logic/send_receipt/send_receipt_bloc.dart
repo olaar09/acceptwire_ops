@@ -1,3 +1,4 @@
+import 'package:acceptwire/exceptions/RequestResponseException.dart';
 import 'package:acceptwire/repository/receipt_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
@@ -49,8 +50,11 @@ class SendReceiptBloc extends Cubit<SendReceiptState> {
     if (response is bool) {
       this.emit(SendReceiptState.loaded(transactionId: transactionId));
     } else {
-      print(response);
-      this.emit(SendReceiptState.networkErr(message: response));
+      if (response is RequestResponseException) {
+        this.emit(SendReceiptState.networkErr(message: response.cause));
+      } else {
+        this.emit(SendReceiptState.networkErr(message: response));
+      }
     }
   }
 }
