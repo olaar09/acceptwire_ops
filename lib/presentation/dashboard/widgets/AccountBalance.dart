@@ -72,17 +72,16 @@ class AccountBalance extends StatelessWidget {
         );
       },
       builder: (context, state) {
-        return Expanded(
-            flex: 3,
-            child: Container(
-              padding: EdgeInsets.all(12),
-              child: state.join(
-                  (initial) => displayBalance(0.0, false, state: state),
-                  (loading) => displayBalance(0.0, true, state: state),
-                  (loaded) => displayBalance(
-                      loaded.profilePODO.mainBalance, false,
-                      state: state)),
-            ));
+        return Container(
+          height: 100,
+          padding: EdgeInsets.all(12),
+          child: state.join(
+              (initial) => displayBalance(0.0, false, state: state),
+              (loading) => displayBalance(0.0, true, state: state),
+              (loaded) => displayBalance(
+                  loaded.profilePODO.mainBalance, false,
+                  state: state)),
+        );
       },
     );
   }
