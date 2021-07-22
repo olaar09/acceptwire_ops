@@ -18,7 +18,7 @@ class TransactionBloc extends Cubit<TransactionState> {
   late AuthRepository _authRepository;
   late StreamSubscription fireSubscription;
 
-  static const RECORD_LIMIT = 20; //20;
+  static const RECORD_LIMIT = 100; //20;
 
   // use this to check if data has already been added for the first time
   bool isDataInitialized = false;
@@ -45,6 +45,8 @@ class TransactionBloc extends Cubit<TransactionState> {
             (k, val) => transactions.add(TransactionPODO.fromJson(val)));
         this.emit(TransactionState.loaded(
             transactions: transactions.reversed.toList()));
+
+        /// delay a little bit befre setting isDataInitialized as true so that the on added doesnt fire immidiately
         new Future.delayed(const Duration(milliseconds: 10), () {
           isDataInitialized = true;
         });

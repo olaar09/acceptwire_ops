@@ -13,7 +13,12 @@ class VerifyIdentityBloc extends Cubit<VerifyIdentityState> {
   VerifyIdentityBloc({required this.repository})
       : super(VerifyIdentityState.initial());
 
-  verifyIdentity({required firstName, required lastName, required bvn}) async {
+  verifyIdentity(
+      {required firstName,
+      required lastName,
+      required bvn,
+      required payoutBankName,
+      required payoutBankAccNo}) async {
     this.emit(VerifyIdentityState.verifying());
     if (GetUtils.isNullOrBlank(firstName) ?? true) {
       this.emit(VerifyIdentityState.error(firstName: 'Enter first name'));
@@ -30,10 +35,25 @@ class VerifyIdentityBloc extends Cubit<VerifyIdentityState> {
       return;
     }
 
+    if (GetUtils.isNullOrBlank(payoutBankAccNo) ?? true) {
+      this.emit(VerifyIdentityState.error(bvn: 'Enter payout account number'));
+      return;
+    }
+
+    if (GetUtils.isNullOrBlank(payoutBankName) ?? true) {
+      this.emit(VerifyIdentityState.error(bvn: 'Enter payout account name'));
+      return;
+    }
+
     try {
       this.emit(VerifyIdentityState.verifying());
       var response = await repository.attemptVerification(
-          firstName: firstName, lastName: lastName, bvn: bvn);
+        firstName: firstName,
+        lastName: lastName,
+        bvn: bvn,
+        payoutAccName: payoutBankName,
+        payoutAccNo: payoutBankAccNo,
+      );
       if (response is ProfilePODO) {
         this.emit(VerifyIdentityState.created());
       } else {

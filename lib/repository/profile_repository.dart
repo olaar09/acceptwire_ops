@@ -27,11 +27,18 @@ class ProfileRepository {
     }
   }
 
-  Future attemptVerification({firstName, lastName, bvn}) async {
+  Future attemptVerification(
+      {firstName,
+      lastName,
+      bvn,
+      required payoutAccNo,
+      required payoutAccName}) async {
     try {
       Response response = await _restClient.put('/merchant/verify', data: {
         'lastName': lastName,
         'firstName': firstName,
+        'payoutAccountNumber': payoutAccNo,
+        'payoutBankName': payoutAccName,
         'bvn': bvn,
         'type': 'bioData'
       });
@@ -39,8 +46,10 @@ class ProfileRepository {
       RequestResponse parseResponse = response.data;
       return ProfilePODO.fromJson(parseResponse.data);
     } on DioError catch (e) {
+      print(e.error.reason);
       return e.error.reason;
     } catch (e) {
+      print(e.toString());
       return e.toString();
     }
   }

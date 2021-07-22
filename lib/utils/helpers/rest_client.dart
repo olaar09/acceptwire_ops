@@ -124,6 +124,7 @@ class ApiInterceptors extends Interceptor {
       dioError.error = RequestResponse._(
           status: 'failed', statusCode: 0, reason: 'Error: $errorString');
     } else {
+      print(dioError.response!.data);
       dioError.error = RequestResponse._(
           status: 'failed',
           statusCode: dioError.response!.statusCode,

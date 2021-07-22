@@ -10,10 +10,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
-class NotVerifiedForm extends StatelessWidget {
+class NotVerifiedForm extends StatefulWidget {
+  @override
+  _NotVerifiedFormState createState() => _NotVerifiedFormState();
+}
+
+class _NotVerifiedFormState extends State<NotVerifiedForm> {
   final _bvnTextController = TextEditingController();
+
   final _firstNameTextController = TextEditingController();
+
   final _lastNameTextController = TextEditingController();
+
+  final _bankNameTextController = TextEditingController();
+
+  final _bankAccNoTextController = TextEditingController();
 
   @override
   Widget build(BuildContext buildContext) {
@@ -30,9 +41,12 @@ class NotVerifiedForm extends StatelessWidget {
           Expanded(
             child: primaryButton('Continue', vertical: 14, onPressed: () async {
               _bloc.verifyIdentity(
-                  firstName: _firstNameTextController.text,
-                  lastName: _lastNameTextController.text,
-                  bvn: _bvnTextController.text);
+                firstName: _firstNameTextController.text,
+                lastName: _lastNameTextController.text,
+                bvn: _bvnTextController.text,
+                payoutBankAccNo: _bankAccNoTextController.text,
+                payoutBankName: _bankNameTextController.text,
+              );
             }),
           ),
         ],
@@ -97,6 +111,24 @@ class NotVerifiedForm extends StatelessWidget {
                       (error) => '${error.bvnNameErr}',
                       (initial) => '',
                     )),
+                mTextField('Payout bank Name',
+                    onChanged: (text) {},
+                    controller: _bankNameTextController,
+                    error: state.join(
+                      (verifying) => '',
+                      (verified) => '',
+                      (error) => '${error.bvnNameErr}',
+                      (initial) => '',
+                    )),
+                mTextField('Payout account number',
+                    onChanged: (text) {},
+                    controller: _bankAccNoTextController,
+                    error: state.join(
+                      (verifying) => '',
+                      (verified) => '',
+                      (error) => '${error.bvnNameErr}',
+                      (initial) => '',
+                    )),
                 SizedBox(height: 20.0),
                 state.join(
                   (verifying) => networkActivityIndicator(),
@@ -110,5 +142,16 @@ class NotVerifiedForm extends StatelessWidget {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _bankNameTextController.dispose();
+    _lastNameTextController.dispose();
+    _bvnTextController.dispose();
+    _firstNameTextController.dispose();
+    _bankAccNoTextController.dispose();
+
+    super.dispose();
   }
 }
