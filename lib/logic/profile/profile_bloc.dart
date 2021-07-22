@@ -7,6 +7,7 @@ import 'package:acceptwire/podo/profile_podo.dart';
 import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:get/get.dart';
 import 'package:meta/meta.dart';
 import 'package:sealed_unions/sealed_unions.dart';
 
@@ -16,10 +17,13 @@ part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileRepository repository;
+  late StreamSubscription authSub;
+  late StreamSubscription createProfileSub;
+  late StreamSubscription verifyIdentitySub;
 
   ProfileBloc({required AuthBloc authBloc, required this.repository})
       : super(ProfileState.initial()) {
-    authBloc.stream.listen((AuthenticationState authState) {
+    authSub = authBloc.stream.listen((AuthenticationState authState) {
       authState.join(
         (_) => null,
         (_) => null,
@@ -38,7 +42,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   onVerifyProfileNav(VerifyIdentityBloc verifyIdentityBloc) {
-    verifyIdentityBloc.stream.listen((VerifyIdentityState verifyIdentityState) {
+    verifyIdentitySub = verifyIdentityBloc.stream
+        .listen((VerifyIdentityState verifyIdentityState) {
       verifyIdentityState.join(
         (_) => {},
         (verified) {
@@ -51,7 +56,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   onCreateProfileNav(CreateProfileBloc createProfileBloc) {
-    createProfileBloc.stream.listen((CreateProfileState createProfileState) {
+    createProfileSub = createProfileBloc.stream
+        .listen((CreateProfileState createProfileState) {
       createProfileState.join(
         (_) => {},
         (created) {
@@ -126,5 +132,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }, (needActivation) async* {
       yield ProfileState.notActivated();
     });
+  }
+
+  @override
+  Future<void> close() {
+    if (!GetUtils.isNull(createProfileSub)) createProfileSub.cancel();
+    if (!GetUtils.isNull(verifyIdentitySub)) verifyIdentitySub.cancel();
+
+    authSub.cancel();
+    return super.close();
   }
 }

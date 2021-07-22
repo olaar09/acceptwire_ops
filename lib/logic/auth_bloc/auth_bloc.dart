@@ -1,7 +1,7 @@
-import 'package:acceptwire/logic/profile/profile_bloc.dart';
+import 'dart:async';
+
 import 'package:acceptwire/podo/login_podo.dart';
 import 'package:acceptwire/repository/auth_repository.dart';
-import 'package:acceptwire/repository/meta_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -9,15 +9,18 @@ import 'bloc.dart';
 
 class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AuthRepository _authRepository;
+  late final StreamSubscription firebaseAuthListener;
 
   //final ProfileBloc _profileBloc;
 
   AuthBloc({required AuthRepository authRepository})
       : _authRepository = authRepository,
         super(AuthenticationState.userUnAuthenticated()) {
-    _authRepository.getAuthInstance().authStateChanges().listen((user) {
+    firebaseAuthListener =
+        _authRepository.getAuthInstance().authStateChanges().listen((user) {
       if (user == null) {
-        fireLoggedOutEvent();
+        /// this is firing continuously, find out why.
+        //  fireLoggedOutEvent();
       }
     });
   }
@@ -117,30 +120,6 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
     }
   }
 
-  Stream<AuthenticationState> _runVerificationValidations(event) async* {
-    if (event is SignUpAttemptEvent) {
-      if (GetUtils.isNullOrBlank(event.authData.firstName)!) {
-        yield AuthenticationState.validationFailed(
-            genericError: 'Enter your first name',
-            firstNameError: ' Enter your first name');
-        throw FormatException();
-      }
-      if (GetUtils.isNullOrBlank(event.authData.lastName)!) {
-        yield AuthenticationState.validationFailed(
-            genericError: ' Enter your last name',
-            firstNameError: ' Enter your last name');
-        throw FormatException();
-      }
-
-      if (GetUtils.isNullOrBlank(event.authData.bvnNumber)!) {
-        yield AuthenticationState.validationFailed(
-            genericError: ' Enter your bvn  number',
-            firstNameError: ' Enter your bvn');
-        throw FormatException();
-      }
-    }
-  }
-
   Stream<AuthenticationState> _runAuthValidations(event) async* {
     if (event is SignUpAttemptEvent) {
       if (GetUtils.isNullOrBlank(event.authData.phone)!) {
@@ -221,6 +200,7 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   @override
   Future<void> close() {
     // TODO: implement close
+    firebaseAuthListener.cancel();
     return super.close();
   }
 }

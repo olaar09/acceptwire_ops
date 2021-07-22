@@ -12,13 +12,14 @@ part 'fetch_balance_state.dart';
 
 class FetchBalanceBloc extends Cubit<FetchBalanceState> {
   late ProfileRepository _repository;
+  late StreamSubscription transactionStream;
 
   FetchBalanceBloc(
       {required ProfileRepository repository,
       required TransactionBloc transactionBloc})
       : _repository = repository,
         super(FetchBalanceState.initial()) {
-    transactionBloc.stream.listen((event) {
+    transactionStream = transactionBloc.stream.listen((event) {
       event.join(
         (_) => null,
         (transactionLoaded) async => await fetchBalance(),
@@ -37,5 +38,11 @@ class FetchBalanceBloc extends Cubit<FetchBalanceState> {
     } else {
       this.emit(FetchBalanceState.initial(error: 'An unknown error occurred'));
     }
+  }
+
+  @override
+  Future<void> close() {
+    transactionStream.cancel();
+    return super.close();
   }
 }
