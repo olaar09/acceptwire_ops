@@ -16,8 +16,12 @@ class ProfileEvent extends Union4Impl<_NeedNewProfile, _FetchProfile,
           union)
       : super(union);
 
-  factory ProfileEvent.needNewProfile({required String phone}) =>
-      ProfileEvent._(_factory.first(_NeedNewProfile(phoneNumber: phone)));
+  factory ProfileEvent.needNewProfile(
+          {required String phone, required emailAddress}) =>
+      ProfileEvent._(_factory.first(_NeedNewProfile(
+        phoneNumber: phone,
+        emailAddress: emailAddress,
+      )));
 
   factory ProfileEvent.fetchProfile() =>
       ProfileEvent._(_factory.second(_FetchProfile()));
@@ -31,8 +35,9 @@ class ProfileEvent extends Union4Impl<_NeedNewProfile, _FetchProfile,
 
 class _NeedNewProfile {
   String phoneNumber;
+  String emailAddress;
 
-  _NeedNewProfile({required this.phoneNumber});
+  _NeedNewProfile({required this.phoneNumber, required this.emailAddress});
 }
 
 class _NeedVerification {}

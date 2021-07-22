@@ -54,11 +54,16 @@ class ProfileRepository {
     }
   }
 
-  Future createProfileAfterSignUp({required phoneNumber}) async {
+  Future createProfileAfterSignUp(
+      {required phoneNumber, required email}) async {
     try {
       Response response = await _restClient.post(
         '/merchant',
-        data: {'type': 'phoneData', 'Phone': phoneNumber},
+        data: {
+          'type': 'phoneData',
+          'Phone': phoneNumber,
+          'Email': email,
+        },
       );
 
       RequestResponse parseResponse = response.data;

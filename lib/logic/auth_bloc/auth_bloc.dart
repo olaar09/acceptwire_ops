@@ -96,13 +96,9 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 
       User? user;
       await _authRepository.registerUsingEmailPassword(
-        '${event.authData.firstName}',
         '${event.authData.email}',
         '${event.authData.password}',
       );
-
-      user = await _authRepository.updateDisplayName(
-          '${event.authData.firstName} ${event.authData.lastName}');
 
       yield AuthenticationState.signUpAttemptSucceed(authData: event.authData);
       yield AuthenticationState.userAuthenticated(user: user!);

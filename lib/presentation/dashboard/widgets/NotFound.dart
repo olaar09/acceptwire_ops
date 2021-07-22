@@ -1,5 +1,6 @@
 import 'package:acceptwire/logic/create_profile/create_profile_bloc.dart';
 import 'package:acceptwire/logic/profile/profile_bloc.dart';
+import 'package:acceptwire/repository/auth_repository.dart';
 import 'package:acceptwire/repository/profile_repository.dart';
 import 'package:acceptwire/utils/helpers/buttons.dart';
 import 'package:acceptwire/utils/helpers/text.dart';
@@ -15,7 +16,11 @@ class NotFoundForm extends StatelessWidget {
   @override
   Widget build(BuildContext buildContext) {
     ProfileRepository _profileRepo = buildContext.read<ProfileRepository>();
-    CreateProfileBloc _bloc = CreateProfileBloc(repository: _profileRepo);
+    AuthRepository _authRepo = buildContext.read<AuthRepository>();
+    CreateProfileBloc _bloc = CreateProfileBloc(
+      repository: _profileRepo,
+      authRepository: _authRepo,
+    );
 
     /// call create
     ProfileBloc _profileBloc = buildContext.read<ProfileBloc>();

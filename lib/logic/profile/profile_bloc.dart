@@ -28,7 +28,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         (_) => null,
         (_) => null,
         (signUpSuccess) {
-          fireNeedNewProfileEvent(phoneNumber: signUpSuccess.authData.phone);
+          fireNeedNewProfileEvent(
+            phoneNumber: signUpSuccess.authData.phone,
+            emailAddress: signUpSuccess.authData.email,
+          );
         },
       );
     });
@@ -68,14 +71,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   /// create a new profile after signup
-  Future<ProfilePODO>? fireNeedNewProfileEvent({phoneNumber}) {
-    this.add(ProfileEvent.needNewProfile(phone: phoneNumber));
+  Future<ProfilePODO>? fireNeedNewProfileEvent(
+      {phoneNumber, required emailAddress}) {
+    this.add(ProfileEvent.needNewProfile(
+      phone: phoneNumber,
+      emailAddress: emailAddress,
+    ));
   }
 
-  Stream<ProfileState> autoCreateProfile(phoneNumber) async* {
+  Stream<ProfileState> autoCreateProfile(phoneNumber, emailAddress) async* {
     yield ProfileState.loading(hasError: false);
-    var response =
-        await repository.createProfileAfterSignUp(phoneNumber: phoneNumber);
+    var response = await repository.createProfileAfterSignUp(
+      phoneNumber: phoneNumber,
+      email: emailAddress,
+    );
     if (response is ProfilePODO) {
       yield ProfileState.notVerified();
     } else {
@@ -106,7 +115,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   @override
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
     yield* event.join((needNewProfile) async* {
-      yield* autoCreateProfile(needNewProfile.phoneNumber);
+      yield* autoCreateProfile(
+        needNewProfile.phoneNumber,
+        needNewProfile.emailAddress,
+      );
     }, (fetchProfile) async* {
       yield* doFetchProfile();
     }, (needsVerification) async* {
