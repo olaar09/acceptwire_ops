@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "27987563115",
+    "firebase_url": "https://acceptwire-bfa20-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "acceptwire-bfa20",
+    "storage_bucket": "acceptwire-bfa20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27987563115:android:c9345b89c8338d4af3d72e",
+        "android_client_info": {
+          "package_name": "com.app.acceptwire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "27987563115-iiu1vi079quhoaud44099a049fsh0kcm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUZdM3niENWW5uIL4s5ip9athqFGmM7JU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27987563115-iiu1vi079quhoaud44099a049fsh0kcm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "27987563115-7rit4kkptk4bbor0nvb30lbia5r03575.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.acceptwire"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

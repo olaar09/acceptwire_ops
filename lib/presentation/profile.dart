@@ -30,7 +30,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext buildContext) {
     var _authBloc = buildContext.read<AuthBloc>();
-    var _profileBloc = buildContext.read<ProfileBloc>();
+    // var _profileBloc = buildContext.read<ProfileBloc>();
 
     showProfile(AuthBloc bloc, ProfilePODO user) {
       return Padding(
@@ -43,6 +43,7 @@ class ProfilePage extends StatelessWidget {
               height: 50,
             ),
             profileItem(title: 'Display name', value: user.displayName),
+            profileItem(title: 'Email address', value: user.emailAddress),
             profileItem(title: 'Phone number', value: user.phone),
             profileItem(title: 'payout bank name', value: user.payoutBankName),
             profileItem(
