@@ -1,5 +1,7 @@
 import 'package:acceptwire/logic/auth_bloc/auth_bloc.dart';
 import 'package:acceptwire/logic/auth_bloc/auth_states.dart';
+import 'package:acceptwire/logic/profile/profile_bloc.dart';
+import 'package:acceptwire/podo/profile_podo.dart';
 import 'package:acceptwire/utils/helpers/buttons.dart';
 import 'package:acceptwire/utils/helpers/get_value.dart';
 import 'package:acceptwire/utils/helpers/navigation.dart';
@@ -11,64 +13,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfilePage extends StatelessWidget {
-  showProfile(AuthBloc bloc, User user) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
+  profileItem({required title, required value}) {
+    return Container(
+      padding: EdgeInsets.all(12),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 50,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.grey[300]!)),
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      CircleAvatar(
-                        backgroundColor:
-                            Vl.color(color: MColor.K_SECONDARY_MAIN),
-                        backgroundImage: AssetImage('assets/images/ply.png'),
-                        radius: 30,
-                      ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      boldText('${user.displayName}'),
-                      regularText('Student',
-                          size: 13,
-                          color: Vl.color(color: MColor.K_SECONDARY_MAIN)),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      boldText('${user.email}', size: 16),
-                      SizedBox(
-                        height: 35,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          primaryButton('Logout', vertical: 10, onPressed: () async {
-            bloc.fireLoggedOutEvent();
-          })
-          // Add widgets for verifying email
-          // and, signing out the user
+          boldText('$value'),
+          regularText('$title'),
+          Divider(thickness: 0.9)
         ],
       ),
     );
@@ -77,35 +30,61 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext buildContext) {
     var _authBloc = buildContext.read<AuthBloc>();
+    var _profileBloc = buildContext.read<ProfileBloc>();
+
+    showProfile(AuthBloc bloc, ProfilePODO user) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 50,
+            ),
+            profileItem(title: 'Display name', value: user.displayName),
+            profileItem(title: 'Phone number', value: user.phone),
+            profileItem(title: 'payout bank name', value: user.payoutBankName),
+            profileItem(
+                title: 'payout account number',
+                value: user.payoutAccountNumber),
+            SizedBox(
+              height: 15,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                primaryButton('Logout', vertical: 10, onPressed: () async {
+                  bloc.fireLoggedOutEvent();
+                })
+              ],
+            )
+            // Add widgets for verifying email
+            // and, signing out the user
+          ],
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         leading: leadingBtn(buildContext),
-        title: Text('Profile'),
+        title: boldText('Profile'),
+        centerTitle: false,
         backgroundColor: Vl.color(color: MColor.K_LIGHT_PLAIN),
       ),
-      body: BlocConsumer<AuthBloc, AuthenticationState>(
+      body: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
-          state.join(
-            (loading) => null,
-            (validationFailed) => null,
-            (loginAttemptFailed) => null,
-            (signUpAttemptFailed) => null,
-            (unAuth) => navOfAllPage(context: context, route: '/login'),
-            (authenticated) =>
-                navOfAllPage(context: context, route: '/dashboard'),
-            (_) => emptyState(),
-          );
+          print('State changed $state');
         },
         builder: (context, state) {
           return state.join(
             (loading) => networkActivityIndicator(),
-            (validationFailed) => emptyState(),
-            (loginAttemptFailed) => emptyState(),
-            (signUpAttemptFailed) => emptyState(),
-            (unAuth) => emptyState(),
-            (authenticated) => showProfile(_authBloc, authenticated.user),
+            (_) => emptyState(),
+            (_) => emptyState(),
+            (_) => emptyState(),
+            (loaded) => showProfile(_authBloc, loaded.profilePODO),
             (_) => emptyState(),
           );
         },

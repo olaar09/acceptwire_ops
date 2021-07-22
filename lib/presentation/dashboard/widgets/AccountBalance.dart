@@ -16,9 +16,17 @@ class AccountBalance extends StatelessWidget {
   Widget build(BuildContext buildContext) {
     _bloc = buildContext.read<FetchBalanceBloc>();
 
-    displayBalance(double balance, bool loading) {
+    displayBalance(double balance, bool loading,
+        {required FetchBalanceState state}) {
       return FocusDetector(
-        onVisibilityGained: () async => await _bloc.fetchBalance(),
+        onVisibilityGained: () async {
+          // load if not already loaded.
+          state.join(
+            (initial) async => await _bloc.fetchBalance(),
+            (_) => null,
+            (_) => null,
+          );
+        },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -69,10 +77,11 @@ class AccountBalance extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(12),
               child: state.join(
-                  (initial) => displayBalance(0.0, false),
-                  (loading) => displayBalance(0.0, true),
-                  (loaded) =>
-                      displayBalance(loaded.profilePODO.mainBalance, false)),
+                  (initial) => displayBalance(0.0, false, state: state),
+                  (loading) => displayBalance(0.0, true, state: state),
+                  (loaded) => displayBalance(
+                      loaded.profilePODO.mainBalance, false,
+                      state: state)),
             ));
       },
     );

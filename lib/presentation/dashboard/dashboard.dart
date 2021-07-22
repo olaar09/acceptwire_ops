@@ -123,9 +123,16 @@ class Dashboard extends StatelessWidget {
               (_) => emptyState(),
               (_) => emptyState(),
               (_) => emptyState(),
-              (profileLoaded) => CircleAvatar(
-                backgroundColor: Vl.color(color: MColor.K_PRIMARY_MAIN),
-                backgroundImage: AssetImage('assets/images/hi.png'),
+              (profileLoaded) => InkWell(
+                onTap: () => navToPage(
+                  context: buildContext,
+                  route: '/profile',
+                  data: null,
+                ),
+                child: CircleAvatar(
+                  backgroundColor: Vl.color(color: MColor.K_PRIMARY_MAIN),
+                  backgroundImage: AssetImage('assets/images/hi.png'),
+                ),
               ),
               (_) => emptyState(),
             ),

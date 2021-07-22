@@ -10,6 +10,8 @@ class ProfilePODO {
   bool activated;
   bool verified;
   double mainBalance;
+  String? payoutAccountNumber;
+  String? payoutBankName;
   List<BankAccountPODO>? bankAccounts;
 
   ProfilePODO.setData(
@@ -18,6 +20,9 @@ class ProfilePODO {
       this.phone,
       this.emailAddress,
       this.bvn,
+      this.displayName,
+      this.payoutBankName,
+      this.payoutAccountNumber,
       this.mainBalance = 0,
       this.bankAccounts,
       this.verified = false,
@@ -30,7 +35,13 @@ class ProfilePODO {
       emailAddress: map['Email'],
       firstName: map['FirstName'],
       lastName: map['LastName'],
+      payoutAccountNumber: map.containsKey('PayoutAccountNumber')
+          ? map['PayoutAccountNumber']
+          : '',
+      payoutBankName:
+          map.containsKey('PayoutBankName') ? map['PayoutBankName'] : '',
       bvn: map['BVN'],
+      displayName: '${map['FirstName']} ${map['LastName']}',
       bankAccounts: map.containsKey('Accounts')
           ? BankAccountPODO().fromJsonArr(map['Accounts'])
           : [],
