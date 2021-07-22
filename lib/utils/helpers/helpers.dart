@@ -83,7 +83,7 @@ void playTune() {
   FlutterRingtonePlayer.play(
     android: AndroidSounds.notification,
     ios: IosSounds.glass,
-    looping: true,
+    looping: false,
     // Android only - API >= 28
     volume: 0.1,
     // Android only - API >= 28
