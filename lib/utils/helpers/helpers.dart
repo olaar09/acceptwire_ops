@@ -42,7 +42,6 @@ Future<bool> isFileExists(String path) async {
 Future<String> getFilePath(uniqueFileName) async {
   String path = '';
   // print('downloading.. ${dir.path}/$uniqueFileName');
-
   return path;
 }
 

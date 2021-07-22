@@ -91,7 +91,7 @@ class _MyAppState extends State<MyApp> {
               (_) => null,
               (_) => null,
               (_) => null,
-              (_) => print('no auth')
+              (_) => print('user signed up')
             );
           },
           child: MaterialApp(

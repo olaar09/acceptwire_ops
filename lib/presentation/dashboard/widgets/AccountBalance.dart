@@ -73,7 +73,7 @@ class AccountBalance extends StatelessWidget {
       },
       builder: (context, state) {
         return Expanded(
-            flex: 2,
+            flex: 3,
             child: Container(
               padding: EdgeInsets.all(12),
               child: state.join(

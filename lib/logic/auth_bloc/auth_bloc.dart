@@ -103,6 +103,9 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
         '${event.authData.password}',
       );
 
+      user = await _authRepository.updateDisplayName(
+          '${event.authData.firstName} ${event.authData.lastName}');
+
       yield AuthenticationState.signUpAttemptSucceed(authData: event.authData);
       yield AuthenticationState.userAuthenticated(user: user!);
     } on FirebaseAuthException catch (e) {
@@ -115,6 +118,7 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
             message: 'Email already exist. Sign in instead.');
       }
     } catch (e) {
+      print(e.toString());
       yield AuthenticationState.signUpAttemptFailed(
           message: 'An unknown error happened');
     }
@@ -182,24 +186,20 @@ class AuthBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 
   fireRegisterEvent(
       { //required firstName,
-      // required lastName,
       required phone,
       //  required bvn,
       required password,
       required email}) {
     this.add(SignUpAttemptEvent(
         authData: AuthData.signUp(
-            email: email,
-            password: password,
-            // firstName: firstName,
-            // bvnNumber: bvn,
-            //  lastName: lastName,
-            phone: phone)));
+      email: email,
+      password: password,
+      phone: phone,
+    )));
   }
 
   @override
   Future<void> close() {
-    // TODO: implement close
     firebaseAuthListener.cancel();
     return super.close();
   }

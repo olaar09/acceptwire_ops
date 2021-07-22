@@ -35,9 +35,7 @@ class ProfilePage extends StatelessWidget {
     showProfile(AuthBloc bloc, ProfilePODO user) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             SizedBox(
               height: 50,
