@@ -66,7 +66,7 @@ getTimeOnly(DateTime dateTime) {
 }
 
 formatDateTime(DateTime dateTime) {
-  return DateFormat('yyyy-MM-dd').format(dateTime); //kk:mm
+  return DateFormat('yyyy-MM-dd hh:mm').format(dateTime); //kk:mm
 }
 
 bool hasTimeExpired(time) {
